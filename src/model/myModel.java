@@ -11,6 +11,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.*;
 import java.util.*;
@@ -42,12 +46,39 @@ public class myModel extends Observable implements IModel {
     }
 
 
-    public void callSearch(    String query, String nameQuery, Indexer index,String pathToRead,HashMap<String,TreeMap<String,Double>> relevantDoc, double docAvg) throws IOException {
+    public void callSearchOneQuery(String nameQuery, String query, Indexer index, String pathToRead, HashMap<String,TreeMap<String,Double>> relevantDoc, double docAvg) throws IOException {
+        searche.RankDocs(nameQuery,query,index,pathToRead,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
+    }
+
+    public void callSearchManyQuery(    String nameQuery, String query, Indexer index,String pathToRead,HashMap<String,TreeMap<String,Double>> relevantDoc, double docAvg) throws IOException {
         //to add parsing option
-        searche.RankDocs(query,nameQuery,index,pathToRead,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
+
+        //to add tags parsing and then call oneQuery function
+        searche.RankDocs(nameQuery,query,index,pathToRead,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
     }
 
 
+    public void parseQuery(String pathOfQueries) throws IOException {
+
+        HashMap<String,String > listQuery=new HashMap<>();
+        File input = new File(pathOfQueries);
+        Document document = Jsoup.parse(input, "UTF-8");
+        Elements id = document.getElementsByTag("num");
+        Elements query = document.getElementsByTag("title");
+
+        int i=0;
+        for(Element e: query){
+            listQuery.put(id.get(i).text(),query.text());
+            i++;
+
+        }
+
+        for(Map.Entry<String,String> entry : listQuery.entrySet()){
+            /////parse for query
+            callSearchOneQuery(entry.getKey(),entry.getValue(),index,pathToRead,relevantDoc,getDocAvg());
+        }
+
+    }
 
 
 
