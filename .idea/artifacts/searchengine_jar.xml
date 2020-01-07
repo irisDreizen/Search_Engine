@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="searchengine:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/searchengine_jar</output-path>
+    <root id="archive" name="searchengine.jar">
+      <element id="module-output" name="searchengine" />
+      <element id="extracted-dir" path="D:/documents/users/azariag/Downloads/jsoup-1.12.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/documents/users/azariag/Downloads/lucene-snowball-3.0.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
