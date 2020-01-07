@@ -12,8 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 
@@ -23,12 +22,40 @@ public class myModel extends Observable implements IModel {
    private boolean toStem=false;
   private   model.Indexer index;
    private HashMap<String, termData> dictionary;
+   private Searcher searche= new Searcher();
+    public  HashMap<String,TreeMap<String,Double> >relevantDoc=new HashMap<>();
 
 
 
     public void setToStem(boolean toStem) {
         this.toStem = toStem;
     }
+
+    public double getDocAvg(){
+        double sum=0;
+        for(Map.Entry<String ,DocDetails> entry : index.getP().getDocInfo().entrySet()){
+            sum=sum+entry.getValue().getDocSize();
+        }
+
+        double avg=sum/index.getP().getDocInfo().size();
+        return  avg;
+    }
+
+
+    public void callSearch(    String query, String nameQuery, Indexer index,String pathToRead,HashMap<String,TreeMap<String,Double>> relevantDoc, double docAvg) throws IOException {
+        //to add parsing option
+        searche.RankDocs(query,nameQuery,index,pathToRead,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
+    }
+
+
+
+
+
+
+
+
+
+
 
     public void setDictionary(String pathToRead1, String pathToWrite1, boolean toStem1) throws IOException {
         index=new model.Indexer(pathToRead1,pathToWrite1,toStem1);

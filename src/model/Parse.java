@@ -23,6 +23,10 @@ public class Parse {
     private boolean toStem;
     PorterStemmer stemmer;
 
+    public Parse() {
+
+    }
+
     public Parse(String stopWordsPath) throws IOException {
         stemmer = new PorterStemmer();
         toStem=false;
