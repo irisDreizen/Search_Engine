@@ -11,7 +11,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../lucene-snowball-3.0.2.jar!/" />
+          <root url="jar://$USER_HOME$/lucene-snowball-3.0.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -56,7 +56,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../לימודים/שנה ג/אחזור/מנוע חלק ב/jars/jackson-databind-2.9.4.jar!/" />
+          <root url="jar://$USER_HOME$/לימודים/שנה ג/אחזור/מנוע חלק ב/jars/jackson-databind-2.9.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -65,7 +65,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../לימודים/שנה ג/אחזור/מנוע חלק ב/jars/jackson-annotations-2.9.4.jar!/" />
+          <root url="jar://$USER_HOME$/לימודים/שנה ג/אחזור/מנוע חלק ב/jars/jackson-annotations-2.9.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -74,11 +74,12 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../לימודים/שנה ג/אחזור/מנוע חלק ב/jars/jackson-core-2.9.4.jar!/" />
+          <root url="jar://$USER_HOME$/לימודים/שנה ג/אחזור/מנוע חלק ב/jars/jackson-core-2.9.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="jackson-annotations-2.9.4" level="project" />
   </component>
 </module>

@@ -184,14 +184,14 @@ public class Ranker {
         private String word;
         private int score;
 
-        public String getWord() {return this.word;}
-        public int getScore() {return this.score;}
+        public String getWord() {
+            return this.word;
+        }
 
+        public int getScore() {
+            return this.score;
+        }
 
-
-
-
-    public void semantic(String query){
 
     }
 }
