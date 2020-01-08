@@ -56,4 +56,7 @@ public class viewModel extends Observable implements Observer {
     public void loadDictionary() throws IOException {
         model.loadDictionary(pahToRead,pathToWrite,toStem);
     }
+    public void callSearchOneQuery(String nameQuery, String query) throws IOException {
+        model.callSearchOneQuery(nameQuery,query);
+    }
 }

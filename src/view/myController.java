@@ -35,6 +35,7 @@ public class myController implements Observer {
     @FXML
     public javafx.scene.control.TextField txtfld_pathToRead;
     public javafx.scene.control.TextField txtfld_pathToWrite;
+    public javafx.scene.control.TextField txtfld_singleQuery;
     public javafx.scene.control.CheckBox check_stem;
     public javafx.scene.control.Button btn_dictionaryOn;
     public javafx.scene.control.Button btn_clearData;
@@ -56,7 +57,9 @@ public class myController implements Observer {
         myStage=primaryStage;
     }
 
-
+    public void callSearchOneQuery() throws IOException {
+        this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery.getText());
+    }
     public void loadPathToRead(){
         JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         jfc.setDialogTitle("Choose a directory to read: ");

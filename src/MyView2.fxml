@@ -55,16 +55,16 @@
                        <Button fx:id="btn_loadDictionary" mnemonicParsing="false" onAction="#loadDictionary" prefHeight="31.0" prefWidth="295.0" text="load dictionary" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 
                        <Label text="query part:" GridPane.rowIndex="8" />
-                       <TextField fx:id="txtfld_singleQuery" prefHeight="31.0" prefWidth="50.0"  GridPane.columnIndex="1" GridPane.rowIndex="8" /> />
-                       <Button fx:id="findQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="search" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                       <TextField fx:id="txtfld_singleQuery" prefHeight="31.0" prefWidth="50.0"  GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                       <Button fx:id="findQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="search" GridPane.columnIndex="2" GridPane.rowIndex="8" onAction="#callSearchOneQuery" />
 
 
                        <Label text="browse query path:" GridPane.rowIndex="9"/>
                        <TextField fx:id="txtfld_pathForQuery" prefHeight="31.0" prefWidth="50.0"  GridPane.columnIndex="1" GridPane.rowIndex="9" />
                        <Button fx:id="browse_pathRorQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="browse path of queries" GridPane.columnIndex="2" GridPane.rowIndex="9" />
-                       <Button fx:id="search_pathRorQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="search from the file" GridPane.columnIndex="2" GridPane.rowIndex="9" />
-                       <CheckBox fx:id="check_semantic"  text="to use semantic?" GridPane.columnIndex="2"  GridPane.rowIndex="10"/>
-                       <Button fx:id="enteties" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="show me enteties" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                       <Button fx:id="search_pathRorQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="search from the file" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+                       <CheckBox fx:id="check_semantic"  text="to use semantic?" GridPane.columnIndex="2"  GridPane.rowIndex="11"/>
+                       <Button fx:id="enteties" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="show me enteties" GridPane.columnIndex="1" GridPane.rowIndex="12" />
 
                    </children>
                </GridPane>
