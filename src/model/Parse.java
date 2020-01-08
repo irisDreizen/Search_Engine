@@ -40,6 +40,11 @@ public class Parse {
         YeshutGlobalMap=new HashMap<>();
     }
 
+    public void setDocInfo(HashMap<String, DocDetails> docInfo) {
+        DocInfo = docInfo;
+    }
+
+
     public HashMap<String, DocDetails> getDocInfo() {
         return DocInfo;
     }

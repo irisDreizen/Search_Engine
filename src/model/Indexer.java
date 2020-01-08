@@ -5,6 +5,7 @@ import javafx.scene.control.ButtonType;
 import javafx.util.Pair;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import org.tartarus.snowball.ext.PorterStemmer;
 
@@ -80,7 +81,31 @@ public class Indexer {
         return  postingName;
     }
 
+    public HashMap<String, DocDetails> loadDocDetails(String pathToWrite) throws IOException {
+        HashMap<String, DocDetails> DocDetailsMap = new HashMap<>();
+        File f;
+        f=new File(pathToWrite+"\\" + "DocInfo" + ".txt");
+        if(!f.exists()){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"this is a wrong path");
+            Optional<ButtonType> result = alert.showAndWait();
+            return null;
+        }
+        BufferedReader bf= new BufferedReader(new FileReader(f));
+        String st1=bf.readLine();
+        while (st1!= null) {
+            String [] splitedText = st1.split("@");
+            String docName = splitedText[0];
+            String DocSize = splitedText[1];
+            String max_tf = splitedText[2];
+            String unique = splitedText[3];
+            String yeshut = splitedText[4];
+            DocDetails docDetails = new DocDetails(Integer.parseInt(max_tf),Integer.parseInt(unique),Integer.parseInt(DocSize),Integer.parseInt(yeshut));
+            DocDetailsMap.put(docName,docDetails);
+            st1=bf.readLine();
+        }
+        return DocDetailsMap;
 
+    }
 
     public void loadDictionary() throws IOException {
         int counter=0;
@@ -115,6 +140,7 @@ public class Indexer {
             counter++;
         }
         bf.close();
+        p.setDocInfo(loadDocDetails(pathToWrite));
     }
 
 
@@ -194,6 +220,7 @@ public class Indexer {
 
          MergePostingFiles(pathToWrite);
          writeDocInfoFile(pathToWrite);
+         copyStopWords(pathToRead,pathToWrite);
         System.out.println(p.getDictionary().size());
 
 
@@ -542,17 +569,16 @@ public class Indexer {
         }
 
         bf.close();
+    }
 
 
+    private static void copyStopWords(String pathToRead, String pathToWrite) throws IOException {
 
-
-
-
-
-
-
-
-
+        String sourcePath = pathToRead+"\\stop_words.txt";
+        String destinationPath = pathToWrite+"stop_words.txt";
+        File source = new File(sourcePath);
+        File dest = new File(destinationPath);
+        Files.copy(source.toPath(), dest.toPath());
     }
 
 }
