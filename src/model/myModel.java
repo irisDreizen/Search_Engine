@@ -46,7 +46,7 @@ public class myModel extends Observable implements IModel {
     }
 
 
-    public void callSearchOneQuery(String nameQuery, String query, Indexer index, String pathToRead, HashMap<String,TreeMap<String,Double>> relevantDoc, double docAvg) throws IOException {
+    public void callSearchOneQuery(String nameQuery, String query) throws IOException {
         searche.RankDocs(nameQuery,query,index,pathToRead,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
     }
 
@@ -75,7 +75,7 @@ public class myModel extends Observable implements IModel {
 
         for(Map.Entry<String,String> entry : listQuery.entrySet()){
             /////parse for query
-            callSearchOneQuery(entry.getKey(),entry.getValue(),index,pathToRead,relevantDoc,getDocAvg());
+            callSearchOneQuery(entry.getKey(),entry.getValue());
         }
 
     }

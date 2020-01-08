@@ -55,7 +55,7 @@
                        <Button fx:id="btn_loadDictionary" mnemonicParsing="false" onAction="#loadDictionary" prefHeight="31.0" prefWidth="295.0" text="load dictionary" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 
                        <Label text="query part:" GridPane.rowIndex="8" />
-                       <TextField fx:id="txtfld_singleQuery" prefHeight="31.0" prefWidth="50.0"  GridPane.columnIndex="1" GridPane.rowIndex="8"  />
+                       <TextField fx:id="txtfld_singleQuery" prefHeight="31.0" prefWidth="50.0"  GridPane.columnIndex="1" GridPane.rowIndex="8" /> />
                        <Button fx:id="findQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="search" GridPane.columnIndex="2" GridPane.rowIndex="8" />
 
 
