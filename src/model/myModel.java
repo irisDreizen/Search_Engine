@@ -42,7 +42,7 @@ public class myModel extends Observable implements IModel {
     }
 
 
-    public void callSearch(    String query, String nameQuery, Indexer index,String pathToRead,HashMap<String,TreeMap<String,Double>> relevantDoc, double docAvg) throws IOException {
+    public void callSearch(String query, String nameQuery, Indexer index,String pathToRead,HashMap<String,TreeMap<String,Double>> relevantDoc, double docAvg) throws IOException {
         //to add parsing option
         searche.RankDocs(query,nameQuery,index,pathToRead,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
     }
