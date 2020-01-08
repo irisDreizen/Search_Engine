@@ -192,13 +192,23 @@ public class Indexer {
         }
         posting(local_dictionary2,pathToWrite);
 
-         MergePostingFiles(pathToRead);
-
+         MergePostingFiles(pathToWrite);
+         writeDocInfoFile(pathToWrite);
         System.out.println(p.getDictionary().size());
 
 
     }
 
+    public void writeDocInfoFile(String pathToWrite) throws IOException {
+        File file = new File(pathToWrite+"\\" + "DocInfo" + ".txt");
+        FileWriter fw= new FileWriter(file);
+        BufferedWriter bw= new BufferedWriter(fw);
+        for(Map.Entry<String,DocDetails> entry : p.getDocInfo().entrySet()){
+            bw.write(entry.getKey()+"@"+entry.getValue().getDocSize()+"@"+entry.getValue().getMax_tf()+"@"+entry.getValue().getUniqeWords()+"@"+entry.getValue().getYeshutNumber());
+            bw.newLine();
+        }
+
+    }
 
     public void posting(TreeMap<String,String> localDictionary,String pathToWrite) throws IOException {
         File file = new File(pathToWrite+"\\" +"IC"+ counterWriter + ".txt");
@@ -235,11 +245,11 @@ public class Indexer {
 
     }
 
-    public void MergePostingFiles(String pathToRead) throws IOException {
+    public void MergePostingFiles(String pathToWrite) throws IOException {
         Queue<String>filesQueue = new LinkedList<String>();
         int index=0;
         while(index < counterWriter-1){//insert all posting files to the queue
-            filesQueue.add(pathToRead+"\\"+"IC"+index+".txt");
+            filesQueue.add(pathToWrite+"\\"+"IC"+index+".txt");
             index++;
 
         }
@@ -252,10 +262,10 @@ public class Indexer {
             File fileSecond=new File(file2);
             File file3;
             if(toStem){
-                file3= new File(pathToRead+"\\"+"s"+posIndex+".txt");
+                file3= new File(pathToWrite+"\\"+"s"+posIndex+".txt");
             }
             else{
-                file3= new File(pathToRead+"\\"+"p"+posIndex+".txt");
+                file3= new File(pathToWrite+"\\"+"p"+posIndex+".txt");
             }
 
 
@@ -342,10 +352,10 @@ public class Indexer {
 
 
             if(toStem){
-                filesQueue.add(pathToRead+"\\"+"s"+posIndex+".txt");
+                filesQueue.add(pathToWrite+"\\"+"s"+posIndex+".txt");
             }
             else{
-                filesQueue.add(pathToRead+"\\"+"p"+posIndex+".txt");
+                filesQueue.add(pathToWrite+"\\"+"p"+posIndex+".txt");
             }
 
             posIndex++;
@@ -364,7 +374,7 @@ public class Indexer {
 
         }
       //mrege yeshut and total posting file
-      filesQueue.add(pathToRead+"\\"+"IC"+(counterWriter-1)+".txt");
+      filesQueue.add(pathToWrite+"\\"+"IC"+(counterWriter-1)+".txt");
 
 
         while(!filesQueue.isEmpty()&& filesQueue.size()!=1){
@@ -375,10 +385,10 @@ public class Indexer {
 
             File file3;
             if(toStem){
-                file3= new File(pathToRead+"\\"+"s"+posIndex+".txt");
+                file3= new File(pathToWrite+"\\"+"s"+posIndex+".txt");
             }
             else{
-                file3= new File(pathToRead+"\\"+"p"+posIndex+".txt");
+                file3= new File(pathToWrite+"\\"+"p"+posIndex+".txt");
             }
 
             BufferedWriter mergePostingTwoFiles=new BufferedWriter(new FileWriter(file3));
@@ -480,10 +490,10 @@ public class Indexer {
 
 
             if(toStem){
-                filesQueue.add(pathToRead+"\\"+"s"+posIndex+".txt");
+                filesQueue.add(pathToWrite+"\\"+"s"+posIndex+".txt");
             }
             else{
-                filesQueue.add(pathToRead+"\\"+"p"+posIndex+".txt");
+                filesQueue.add(pathToWrite+"\\"+"p"+posIndex+".txt");
             }
             posIndex++;
             mergePostingTwoFiles.close();
