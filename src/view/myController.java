@@ -29,6 +29,7 @@ public class myController implements Observer {
     private Stage myStage;
     private String pathToRead="";
     private String pathToWrite="";
+    private String pathForQuery="";
     private boolean toStem=false;
     HashMap<String, termData> dictionary;
 
@@ -36,6 +37,7 @@ public class myController implements Observer {
     public javafx.scene.control.TextField txtfld_pathToRead;
     public javafx.scene.control.TextField txtfld_pathToWrite;
     public javafx.scene.control.TextField txtfld_singleQuery;
+    public javafx.scene.control.TextField txtfld_pathForQuery;
     public javafx.scene.control.CheckBox check_stem;
     public javafx.scene.control.Button btn_dictionaryOn;
     public javafx.scene.control.Button btn_clearData;
@@ -60,6 +62,28 @@ public class myController implements Observer {
     public void callSearchOneQuery() throws IOException {
         this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery.getText());
     }
+
+    public void callSearchManyQuery() throws IOException{
+        String pathOfQueries = txtfld_pathForQuery.getText();
+        myViewModel.callSearchManyQuery(pathOfQueries);
+    }
+
+    public void loadQueryPath(){
+        JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        jfc.setDialogTitle("Choose a directory to read: ");
+        jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        int returnValue = jfc.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            if (jfc.getSelectedFile().isDirectory()) {
+                txtfld_pathForQuery.setText(jfc.getSelectedFile().getPath());
+                pathForQuery=jfc.getSelectedFile().getPath();
+                myViewModel.setPahtForQueries(pathForQuery);
+                //  System.out.println("You selected the directory: " + jfc.getSelectedFile());
+            }
+        }
+    }
+
     public void loadPathToRead(){
         JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         jfc.setDialogTitle("Choose a directory to read: ");

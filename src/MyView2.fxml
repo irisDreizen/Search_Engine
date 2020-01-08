@@ -61,8 +61,8 @@
 
                        <Label text="browse query path:" GridPane.rowIndex="9"/>
                        <TextField fx:id="txtfld_pathForQuery" prefHeight="31.0" prefWidth="50.0"  GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                       <Button fx:id="browse_pathRorQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="browse path of queries" GridPane.columnIndex="2" GridPane.rowIndex="9" />
-                       <Button fx:id="search_pathRorQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="search from the file" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+                       <Button fx:id="browse_pathRorQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="browse path of queries" GridPane.columnIndex="2" GridPane.rowIndex="9" onAction="#loadQueryPath"/>
+                       <Button fx:id="search_pathRorQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="search from the file" GridPane.columnIndex="2" GridPane.rowIndex="10" onAction="#callSearchManyQuery" />
                        <CheckBox fx:id="check_semantic"  text="to use semantic?" GridPane.columnIndex="2"  GridPane.rowIndex="11"/>
                        <Button fx:id="enteties" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="show me enteties" GridPane.columnIndex="1" GridPane.rowIndex="12" />
 

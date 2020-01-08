@@ -13,4 +13,6 @@ public interface IModel {
     public void showDictionary();
     public void loadDictionary(String pathToRead1, String pathToWrite1, boolean toStem1) throws IOException;
     public void callSearchOneQuery(String nameQuery, String query) throws IOException;
+    public void callSearchManyQuery(String pathOfQueries) throws IOException;
+    public void setPathForQueries(String pathForQueries);
 }

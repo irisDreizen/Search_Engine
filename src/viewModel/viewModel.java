@@ -34,6 +34,10 @@ public class viewModel extends Observable implements Observer {
         pathToWrite=path;
         model.setPathToWrite(pathToWrite);
     }
+    public void setPahtForQueries(String pathForQueries) {
+        model.setPathForQueries(pathForQueries);
+    }
+
     public void setToStem(boolean toStemUpdate){
         toStem=toStemUpdate;
         model.setToStem(toStem);
@@ -58,5 +62,8 @@ public class viewModel extends Observable implements Observer {
     }
     public void callSearchOneQuery(String nameQuery, String query) throws IOException {
         model.callSearchOneQuery(nameQuery,query);
+    }
+    public void callSearchManyQuery(String pathOfQueries) throws IOException{
+        model.callSearchManyQuery(pathOfQueries);
     }
 }

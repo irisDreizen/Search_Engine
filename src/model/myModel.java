@@ -11,6 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -23,6 +24,7 @@ import java.util.*;
 public class myModel extends Observable implements IModel {
   private   String pathToRead="";
   private   String pathToWrite="";
+  private  String pathForQueries="";
    private boolean toStem=false;
   private   model.Indexer index;
    private HashMap<String, termData> dictionary;
@@ -46,19 +48,17 @@ public class myModel extends Observable implements IModel {
     }
 
 
-    public void callSearchOneQuery(String nameQuery, String query) throws IOException {
+    public void callSearchOneQuery(String nameQuery, String notParsedquery) throws IOException {
+        String query = parseQuery(pathToRead,notParsedquery);
         searche.RankDocs(nameQuery,query,index,pathToRead,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
     }
 
-    public void callSearchManyQuery(    String nameQuery, String query, Indexer index,String pathToRead,HashMap<String,TreeMap<String,Double>> relevantDoc, double docAvg) throws IOException {
-        //to add parsing option
-
-        //to add tags parsing and then call oneQuery function
-        searche.RankDocs(nameQuery,query,index,pathToRead,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
+    public void callSearchManyQuery(String pathOfQueries) throws IOException {
+        TagsAndParseQuery_AndRank(pathOfQueries);
     }
 
 
-    public void parseQuery(String pathOfQueries) throws IOException {
+    public void TagsAndParseQuery_AndRank(String pathOfQueries) throws IOException {
 
         HashMap<String,String > listQuery=new HashMap<>();
         File input = new File(pathOfQueries);
@@ -74,14 +74,24 @@ public class myModel extends Observable implements IModel {
         }
 
         for(Map.Entry<String,String> entry : listQuery.entrySet()){
-            /////parse for query
             callSearchOneQuery(entry.getKey(),entry.getValue());
         }
 
     }
 
 
+public String parseQuery(String pathToRead, String query) throws IOException {
+        QueryPraser queryPraser = new QueryPraser(pathToRead+"\\stop_words.txt");
+        queryPraser.buildDictionary(query);
+        HashMap<String, termData> newQuery =  queryPraser.getDictionary();
+        String parsedQuery = "";
+        for(Map.Entry<String, termData> term : newQuery.entrySet()){
+            parsedQuery=parsedQuery+term.getKey()+" ";
+        }
 
+        return parsedQuery;
+
+}
 
 
 
@@ -142,6 +152,9 @@ public class myModel extends Observable implements IModel {
         this.pathToRead = pathToRead;
     }
 
+    public void setPathForQueries(String pathForQueries) {
+        this.pathForQueries = pathForQueries;
+    }
     public void setPathToWrite(String pathToWrite) {
         this.pathToWrite = pathToWrite;
     }
