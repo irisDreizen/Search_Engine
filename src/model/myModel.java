@@ -56,30 +56,61 @@ public class myModel extends Observable implements IModel {
     }
 
     public void callSearchManyQuery(String pathOfQueries) throws IOException {
-        TagsAndParseQuery_AndRank(pathOfQueries);
+        HashMap<String,Query> queries=TagsAndParseQuery_AndRank(pathOfQueries);
+        for(Map.Entry<String,Query> entry : queries.entrySet()){
+           String idQ=entry.getKey();//id
+            String desc=entry.getValue().getDescription();
+            String q=entry.getValue().getTitle()+" "+desc;
+            callSearchOneQuery(idQ,q);
+        }
+
+
     }
 
 
-    public void TagsAndParseQuery_AndRank(String pathOfQueries) throws IOException {
+    public HashMap<String, Query> TagsAndParseQuery_AndRank(String pathOfQueries) throws IOException {
+        HashMap<String, Query> queries = new HashMap<>();
+        try {
+            Document query = Jsoup.parse(new File(pathOfQueries+"\\quries.txt"), "UTF-8");
+            Elements allQueries = query.getElementsByTag("top");
+            for (Element currQ : allQueries) {
+                //insert ID
+                String numQ = currQ.getElementsByTag("num").text();
+                //numQ =numQ.substring(9,hara.length()-1);
+                numQ = numQ.substring(8);
+                String[] t = numQ.split("\\s+");
+                numQ = t[0];
 
-        HashMap<String,String > listQuery=new HashMap<>();
-        File input = new File(pathOfQueries);
-        Document document = Jsoup.parse(input, "UTF-8");
-        Elements id = document.getElementsByTag("num");
-        Elements query = document.getElementsByTag("title");
+                //insert title
+                String titleQ = currQ.getElementsByTag("title").text();
 
-        int i=0;
-        for(Element e: query){
-            listQuery.put(id.get(i).text(),query.text());
-            i++;
+                //insert desc
+                String descQ = currQ.getElementsByTag("desc").text();
 
+                String[] splitDescQ = descQ.split("\\s+");
+                String newDescQ = "";
+                for (String s : splitDescQ) {
+                    if (s.equals("Narrative:")) {
+                        break;
+                    }
+                    newDescQ = newDescQ + " " + s;
+                }
+                newDescQ = newDescQ.substring(13);
+
+                Query newQ = new Query(numQ, titleQ, newDescQ);
+                queries.put(numQ, newQ);
+
+            }
+        }catch (IOException e){
+            e.printStackTrace();
         }
-
-        for(Map.Entry<String,String> entry : listQuery.entrySet()){
-            callSearchOneQuery(entry.getKey(),entry.getValue());
-        }
+        return queries;
 
     }
+
+
+
+
 
 
 public String parseQuery(String pathToWrite, String query) throws IOException {

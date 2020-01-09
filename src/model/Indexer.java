@@ -572,13 +572,17 @@ public class Indexer {
     }
 
 
-    private static void copyStopWords(String pathToRead, String pathToWrite) throws IOException {
+    private static void copyStopWords(String pathToRead, String pathToWrite) {
 
         String sourcePath = pathToRead+"\\stop_words.txt";
         String destinationPath = pathToWrite+"stop_words.txt";
         File source = new File(sourcePath);
         File dest = new File(destinationPath);
-        Files.copy(source.toPath(), dest.toPath());
+        try {
+            Files.copy(source.toPath(), dest.toPath());
+        } catch (IOException e) {
+
+        }
     }
 
 }
