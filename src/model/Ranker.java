@@ -195,7 +195,7 @@ public class Ranker {
         return listOfSynonym;
     }
 
-    // word and score attributes are from DataMuse API
+   // // word and score attributes are from DataMuse API
     static class Word {
         private String word;
         private int score;
