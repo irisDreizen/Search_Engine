@@ -1,17 +1,21 @@
 package view;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.Pair;
 import model.myModel;
 import model.termData;
@@ -185,5 +189,135 @@ public class myController implements Observer {
         myViewModel.setPathToWrite(pathToWrite);
         myViewModel.setToStem(toStem);
         myViewModel.loadDictionary();
+    }
+
+
+
+    public void selectQueries(){
+        Stage stage = new Stage();
+        stage.setTitle("Display Queries");
+
+        Map<String,Map<String,Double>> rankingMap = myViewModel.getRankingMap();
+
+        TableColumn<Map.Entry<String,Map<String,Double>>, String> column1 = new TableColumn<>("Q ID");
+        column1.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String,Map<String,Double>>, String>, ObservableValue<String>>() {
+
+            @Override
+            public ObservableValue<String > call(TableColumn.CellDataFeatures<Map.Entry<String,Map<String,Double>>, String> p) {
+                // this callback returns property for just one cell, you can't use a loop here
+                // for first column we use key
+                return new SimpleObjectProperty<String>(p.getValue().getKey());
+            }
+        });
+
+        TableColumn<Map.Entry<String,Map<String,Double>>, Void> colBtn = new TableColumn("Button Column");
+
+        Callback<TableColumn<Map.Entry<String,Map<String,Double>>, Void>, TableCell<Map.Entry<String,Map<String,Double>>, Void>> cellFactory = new Callback<TableColumn<Map.Entry<String,Map<String,Double>>, Void>, TableCell<Map.Entry<String,Map<String,Double>>, Void>>() {
+            @Override
+            public TableCell<Map.Entry<String,Map<String,Double>>, Void> call(final TableColumn<Map.Entry<String,Map<String,Double>>, Void> param) {
+                final TableCell<Map.Entry<String,Map<String,Double>>, Void> cell = new TableCell<Map.Entry<String,Map<String,Double>>, Void>() {
+
+                    private final Button btn = new Button("show rating");
+
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            Map.Entry<String,Map<String,Double>> data = getTableView().getItems().get(getIndex());
+                            selectDisplayRankQueries(data.getValue());
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        colBtn.setCellFactory(cellFactory);
+
+        TableView<Map.Entry<String,Map<String,Double>>> dictionary = new TableView<>();
+        ObservableList<Map.Entry<String, Map<String,Double>>> items = FXCollections.observableArrayList(rankingMap.entrySet());
+
+        dictionary.setItems(items);
+        dictionary.getColumns().setAll(column1,colBtn);
+
+        Scene scene = new Scene(dictionary);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void selectDisplayRankQueries(Map<String,Double> rankingMap){
+        Stage stage = new Stage();
+        stage.setTitle("Q Rank");
+
+
+        TableColumn<Map.Entry<String, Double>, String> column1 = new TableColumn<>("Doc Number");
+        column1.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, Double>, String>, ObservableValue<String>>() {
+
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, Double>, String> p) {
+                // this callback returns property for just one cell, you can't use a loop here
+                // for first column we use key
+                return new SimpleObjectProperty<String>(p.getValue().getKey());
+            }
+        });
+
+        TableColumn<Map.Entry<String, Double>,Double> column2 = new TableColumn<>("Rank");
+        column2.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, Double>, Double>, ObservableValue<Double>>() {
+
+            @Override
+            public ObservableValue<Double> call(TableColumn.CellDataFeatures<Map.Entry<String, Double>, Double> p) {
+                // for second column we use value
+                return new SimpleObjectProperty<Double>(p.getValue().getValue());
+            }
+        });
+
+        TableColumn<Map.Entry<String, Double>, Void> colBtn = new TableColumn("Button Column");
+        Callback<TableColumn<Map.Entry<String, Double>, Void>, TableCell<Map.Entry<String, Double>, Void>> cellFactory = new Callback<TableColumn<Map.Entry<String, Double>, Void>, TableCell<Map.Entry<String, Double>, Void>>() {
+            @Override
+            public TableCell<Map.Entry<String, Double>, Void> call(final TableColumn<Map.Entry<String, Double>, Void> param) {
+                final TableCell<Map.Entry<String, Double>, Void> cell = new TableCell<Map.Entry<String, Double>, Void>() {
+
+                    private final Button btn = new Button("Entities");
+
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            Map.Entry<String, Double> data = getTableView().getItems().get(getIndex());
+                            //selectDisplayEntities(model.getEntitiesMap(data.getKey()));
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+        colBtn.setCellFactory(cellFactory);
+
+        ObservableList<Map.Entry<String, Double>> items = FXCollections.observableArrayList(rankingMap.entrySet());
+
+        TableView<Map.Entry<String,Double>> dictionary = new TableView<>();
+
+        dictionary.setItems(items);
+        dictionary.getColumns().setAll(column1,column2,colBtn);
+
+        Scene scene = new Scene(dictionary);
+        stage.setScene(scene);
+        stage.show();
     }
 }
