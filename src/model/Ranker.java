@@ -43,7 +43,7 @@ public class Ranker {
         int  numOfDOC=index.getP().getDocInfo().size();
         int sumTotalIdf=0;
 
-        File file3= new File(pathToRead+"\\"+index.getPostingFileName_NoStem()+".txt");
+        File file3= new File(pathToRead+"\\"+index.getPostingFileName_NoStem());
         String st="";
         String [] splitedPosting;
 
@@ -59,9 +59,11 @@ public class Ranker {
                 for (int i = 0; i < splitedQuery.length; i++) {
                     splitedPosting = st.split("@");
                     if (splitedPosting[0].toLowerCase().equals(splitedQuery[i].toLowerCase())) {
+                        investigate=investigate+st;
                         BN25(nameQuery,investigate,relevantDoc,numOfDOC,index.getP().getDocInfo(),docAvg);
 
                     }
+                    investigate="";
 
                 }
                 st=posting.readLine();
@@ -75,11 +77,11 @@ public class Ranker {
     public void BN25(String nameQuery,String postingLine, HashMap<String, TreeMap<String,Double>> relevantDoc,int numOfDoc,HashMap<String, DocDetails> DocInfo,double avg){
         String []st=postingLine.split("@");
         String []docAppear=st[2].split(" ");
-        for(int i=0; i<postingLine.length(); i=i+2){
+        for(int i=0; i<docAppear.length; i=i+2){
             String docName=docAppear[i];
             int numOfAppear=Integer.parseInt(docAppear[i+1]);
             //compute tf
-            double tf=numOfAppear/DocInfo.get(docName).getMax_tf();
+            double tf=(double) numOfAppear/(DocInfo.get(docName).getMax_tf());
 
             double numOfDocCurrenQuery=docAppear.length/2;
 

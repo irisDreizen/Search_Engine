@@ -6,7 +6,7 @@ import java.util.TreeMap;
 
 public class Searcher {
 
-    private Ranker r;
+    private Ranker r=new Ranker();
 
 
     public HashMap<String,TreeMap<String,Double>>   RankDocs(String nameQuery, String query, Indexer index, String pathToRead, HashMap<String,TreeMap<String,Double>> relevantDoc, double docAvg) throws IOException {

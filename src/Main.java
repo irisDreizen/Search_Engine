@@ -81,8 +81,8 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         //--------------
         myController view = fxmlLoader.getController();
-        view.btn_showDictionary.setDisable(true);
-       // view.btn_loadDictionary.setDisable(true);
+       // view.btn_showDictionary.setDisable(true);
+        //view.btn_loadDictionary.setDisable(true);
         view.btn_clearData.setDisable(true);
         view.setStage(primaryStage);
        // view.setResizeEvent(scene);
