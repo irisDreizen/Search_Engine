@@ -62,16 +62,54 @@ public class myModel extends Observable implements IModel {
     }
 
     public void callSearchManyQuery(String pathOfQueries) throws Exception {
-        HashMap<String,Query> queries=TagsAndParseQuery_AndRank(pathOfQueries);
-        for(Map.Entry<String,Query> entry : queries.entrySet()){
-           String idQ=entry.getKey();//id
-            String desc=entry.getValue().getDescription();
-            String q=entry.getValue().getTitle()+" "+desc;
-            callSearchOneQuery(idQ,q);
+        HashMap<String,Map<String,Double>>fix=new HashMap<>();
+        HashMap<String, Query> queries = TagsAndParseQuery_AndRank(pathOfQueries);
+        for (Map.Entry<String, Query> entry : queries.entrySet()) {
+            String idQ = entry.getKey();//id
+            String desc = entry.getValue().getDescription();
+            String q = entry.getValue().getTitle() + " " + desc;
+            callSearchOneQuery(idQ, q);
         }
 
+        for (Map.Entry<String, Map<String, Double>> entry : relevantDoc.entrySet()) {
+            Map<String, Double> temp = entry.getValue();
+            List<Map.Entry<String, Double>> list =
+                    new LinkedList<Map.Entry<String, Double>>(temp.entrySet());
 
+            // Sort the list
+            Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
+                public int compare(Map.Entry<String, Double> o1,
+                                   Map.Entry<String, Double> o2) {
+                    return (o1.getValue()).compareTo(o2.getValue());
+                }
+            });
+
+            // put data from sorted list to hashmap
+            Map<String, Double> temp2 = new HashMap<>();
+            if (list.size() > 50) {
+                for (int i = list.size() - 1; i >= list.size() - 50; i--) {
+                    temp2.put(list.get(i).getKey(), list.get(i).getValue());
+                }
+            } else {
+                for (int j = list.size() - 1; j >= 0; j--) {
+                    temp2.put(list.get(j).getKey(), list.get(j).getValue());
+                }
+
+            }
+            fix.put(entry.getKey(), temp2);
+
+
+        }
+        relevantDoc = fix;
     }
+
+
+
+
+
+
+
+
 
 
     public HashMap<String, Query> TagsAndParseQuery_AndRank(String pathOfQueries) throws IOException {
