@@ -29,21 +29,21 @@ import java.util.TreeMap;
 public class Ranker {
 
     private HashMap<String, Double> weights;
+    private boolean toUseSemantic;
     private final String USER_AGENT = "Mozilla/5.0";
-    public Ranker() {
+    public Ranker(boolean toUseSemantic) {
         weights=new HashMap<>();
+        this.toUseSemantic=toUseSemantic;
     }
 
 
-
-
-    public HashMap<String,Map<String, Double>> collectLinesQuery(String nameQuery, String query, Indexer index,String pathToRead,HashMap<String,Map<String,Double>> relevantDoc, double docAvg) throws IOException {
+    public HashMap<String,Map<String, Double>> collectLinesQuery(String nameQuery, String query, Indexer index,String pathToWrite,HashMap<String,Map<String,Double>> relevantDoc, double docAvg) throws IOException {
 
         String[] splitedQuery=query.split(" ");
         int  numOfDOC=index.getP().getDocInfo().size();
         int sumTotalIdf=0;
 
-        File file3= new File(pathToRead+"\\"+index.getPostingFileName_NoStem());
+        File file3= new File(pathToWrite+"\\"+index.getPostingFileName_NoStem()+".txt");
         String st="";
         String [] splitedPosting;
 
@@ -99,9 +99,7 @@ public class Ranker {
             //compute score for qi
             double partBScore= (tf*(1.3+1))/((1-0.75+0.75*(DocInfo.get(docName).getDocSize()/avg))+tf);
 
-            double score=idf*partBScore;///////////////
-            ///////////////////
-            ////////////////to add weight
+            double score=(weights.get(st[0]))*idf*partBScore;
             if(relevantDoc.containsKey(nameQuery)){
                if(relevantDoc.get(nameQuery).containsKey(docName)){
                   double scoreToAdd= relevantDoc.get(nameQuery).get(docName)+score;
@@ -129,7 +127,9 @@ public class Ranker {
         String [] splitedQuery = query.split(" ");
         for(String word:splitedQuery){
             weights.put(word,(double)1);
-            searchSynonym(word);
+            if(toUseSemantic){
+                searchSynonym(word);
+            }
         }
 
         return newQuery;

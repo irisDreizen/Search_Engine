@@ -6,14 +6,17 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Searcher {
+    private Ranker r;
 
-    private Ranker r=new Ranker();
 
+    public Searcher(boolean toUseSemantic) {
+        r=new Ranker(toUseSemantic);
+    }
 
-    public HashMap<String,Map<String,Double>>   RankDocs(String nameQuery, String query, Indexer index, String pathToRead, HashMap<String, Map<String,Double>> relevantDoc, double docAvg) throws IOException {
+    public HashMap<String,Map<String,Double>>   RankDocs(String nameQuery, String query, Indexer index, String pathToWrite, HashMap<String, Map<String,Double>> relevantDoc, double docAvg) throws IOException {
         //to add parsing option
 
-     return  r.collectLinesQuery(nameQuery, query, index, pathToRead, relevantDoc, docAvg);
+        return  r.collectLinesQuery(nameQuery, query, index, pathToWrite, relevantDoc, docAvg);
 
 
     }

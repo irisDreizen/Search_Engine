@@ -28,11 +28,17 @@ public class myModel extends Observable implements IModel {
    private boolean toStem=false;
   private   model.Indexer index;
    private HashMap<String, termData> dictionary;
-   private Searcher searche= new Searcher();
+   private boolean toUseSemantics = false;
+   private Searcher searche;
     public  HashMap<String,Map<String,Double> >relevantDoc=new HashMap<>();
 
     public HashMap<String,Map<String,Double>> getRankingMap(){
         return relevantDoc;
+    }
+
+    public void setToUseSemantics(boolean toUseSemantics) {
+        this.toUseSemantics = toUseSemantics;
+        searche= new Searcher(toUseSemantics);
     }
 
     public void setToStem(boolean toStem) {
@@ -50,9 +56,9 @@ public class myModel extends Observable implements IModel {
     }
 
 
-    public void callSearchOneQuery(String nameQuery, String query) throws IOException {
-        query=parseQuery(pathToWrite,query);
-        searche.RankDocs(nameQuery,query,index,pathToRead,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
+    public void callSearchOneQuery(String nameQuery, String notParsedquery) throws IOException {
+        String query = parseQuery(pathToWrite,notParsedquery);
+        searche.RankDocs(nameQuery,query,index,pathToWrite,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
     }
 
     public void callSearchManyQuery(String pathOfQueries) throws IOException {
@@ -113,8 +119,8 @@ public class myModel extends Observable implements IModel {
 
 
 
-public String parseQuery(String pathToRead, String query) throws IOException {
-        QueryPraser queryPraser = new QueryPraser(pathToRead+"\\stop_words.txt");
+public String parseQuery(String pathToWrite, String query) throws IOException {
+        QueryPraser queryPraser = new QueryPraser(pathToWrite+"\\stop_words.txt");
         queryPraser.buildDictionary(query);
         HashMap<String, termData> newQuery =  queryPraser.getDictionary();
         String parsedQuery = "";

@@ -18,10 +18,11 @@ public class viewModel extends Observable implements Observer {
         return dictionary;
     }
     public HashMap<String, Map<String,Double>> getRankingMap(){
-        return model. getRankingMap();
-
+        return model.getRankingMap();
     }
-
+    public void setToUseSemantics(boolean toUseSemantics) {
+        this.model.setToUseSemantics(toUseSemantics);
+    }
     public viewModel(IModel model) {
         this.model = model;
     }
