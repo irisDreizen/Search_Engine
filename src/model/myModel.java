@@ -31,6 +31,7 @@ public class myModel extends Observable implements IModel {
    private boolean toUseSemantics = false;
    private Searcher searche;
     public  HashMap<String,Map<String,Double> >relevantDoc=new HashMap<>();
+    private HashMap<String,HashMap<String,Integer>> enteties=new HashMap<>();
 
     public HashMap<String,Map<String,Double>> getRankingMap(){
         return relevantDoc;
@@ -194,9 +195,41 @@ public String parseQuery(String pathToWrite, String query) throws IOException {
     }
 
     public void loadDictionary(String pathToRead1, String pathToWrite1, boolean toStem1) throws IOException {
+         loadEnteties();
         index=new model.Indexer(pathToRead1,pathToWrite1,toStem1);
         index.loadDictionary();
         dictionary=index.getP().getDictionary();
+
+    }
+
+    public void loadEnteties() throws IOException {
+        File f;
+        f=new File(pathToWrite+"\\" + "enteties" + ".txt");
+        if(!f.exists()){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"this is a wrong path");
+            Optional<ButtonType> result = alert.showAndWait();
+        }
+        BufferedReader bf= new BufferedReader(new FileReader(f));
+        String st1=bf.readLine();
+        while (st1!= null) {
+            String[] splitedText = st1.split("@");
+            String entetyName = splitedText[0];
+            String [] docAppear = (splitedText[1]).split(" ");
+            for(int i=0; i<docAppear.length; i=i+2) {
+                String docName = docAppear[i];
+                int numOfAppear = Integer.parseInt(docAppear[i + 1]);
+                if(enteties.containsKey(docName)){
+                    enteties.get(docName).put(entetyName,numOfAppear);
+                }
+                else{
+                    HashMap<String, Integer> toAdd = new HashMap<>();
+                    toAdd.put(entetyName,numOfAppear);
+                    enteties.put(docName,toAdd);
+                }
+            }
+            st1=bf.readLine();
+        }
+        bf.close();
     }
 
 

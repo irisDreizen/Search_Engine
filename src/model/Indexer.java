@@ -19,6 +19,8 @@ public class Indexer {
     private String pathToRead;
     private boolean toStem;
     PorterStemmer stemmer;
+    private BufferedWriter bufferedWriter;
+
 
 
 
@@ -28,11 +30,13 @@ public class Indexer {
     public Indexer(String pathToRead, String pathToWrite,Boolean toStemUpdate) throws IOException {
         stemmer = new PorterStemmer();
         String newPathOfStopWords = pathToRead+"\\stop_words.txt";
-        this.p = new Parse(newPathOfStopWords) ;
+        this.bufferedWriter=new BufferedWriter(new FileWriter(pathToWrite+"\\enteties.txt"));
+        this.p = new Parse(newPathOfStopWords, bufferedWriter) ;
         this.r = new ReadFile(pathToRead+"\\corpus");
         this.pathToWrite=pathToWrite;
         this.pathToRead=pathToRead;
         this.toStem=toStemUpdate;
+
     }
 
     public Parse getP() {
@@ -221,7 +225,8 @@ public class Indexer {
          MergePostingFiles(pathToWrite);
          writeDocInfoFile(pathToWrite);
          copyStopWords(pathToRead,pathToWrite);
-        System.out.println(p.getDictionary().size());
+         bufferedWriter.close();
+     //   System.out.println(p.getDictionary().size());
 
 
     }

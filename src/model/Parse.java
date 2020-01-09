@@ -3,10 +3,7 @@ package model;
 import javafx.util.Pair;
 import org.tartarus.snowball.ext.PorterStemmer;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 
@@ -22,12 +19,13 @@ public class Parse {
     private HashMap<String, Pair<String,Integer>> YeshutGlobalMap;
     private boolean toStem;
     PorterStemmer stemmer;
+    private BufferedWriter bufferedWriter;
 
     public Parse() {
 
     }
 
-    public Parse(String stopWordsPath) throws IOException {
+    public Parse(String stopWordsPath, BufferedWriter bufferedWriter) throws IOException {
         stemmer = new PorterStemmer();
         toStem=false;
         dictionary = new HashMap<String, termData>();
@@ -38,6 +36,7 @@ public class Parse {
         insertStopWords(stopWordsPath);
         DocInfo=new HashMap<>();
         YeshutGlobalMap=new HashMap<>();
+        this.bufferedWriter=bufferedWriter;
     }
 
     public void setDocInfo(HashMap<String, DocDetails> docInfo) {
@@ -564,7 +563,7 @@ public class Parse {
 
     }
 
-    public void buildDictionary(HashMap<String, DocDetails> docDetailsHashMap, TreeMap<String,String> localDictionary, boolean toStem) {
+    public void buildDictionary(HashMap<String, DocDetails> docDetailsHashMap, TreeMap<String,String> localDictionary, boolean toStem) throws IOException {
 
         for (Map.Entry<String, DocDetails> entery : docDetailsHashMap.entrySet()) {//parsing one doc each time
 
@@ -802,6 +801,8 @@ public class Parse {
                         newDetails=newDetails+" "+moredetailsToAdd;//new string with all details that we want to replace with the previous
                         localDictionary.remove(stringSuspectedYeshutUpper);
                         localDictionary.put(stringSuspectedYeshutUpper,newDetails);
+                        bufferedWriter.write(stringSuspectedYeshut+"@"+newDetails);
+                        bufferedWriter.newLine();
                     }
 
 
@@ -830,9 +831,11 @@ public class Parse {
 
     }
 
-    public void YeshutAddToDictionary(HashMap<String, Pair<String,Integer>> termGlobalMap, HashMap<String,Integer> termLocalMap,TreeMap<String,String> localDictionary,String DocName,String termName){
+    public void YeshutAddToDictionary(HashMap<String, Pair<String,Integer>> termGlobalMap, HashMap<String,Integer> termLocalMap,TreeMap<String,String> localDictionary,String DocName,String termName) throws IOException {
         String termNameUpper = termName.toUpperCase();
         String newDetails = termGlobalMap.get(termNameUpper).getKey()+" "+ termGlobalMap.get(termNameUpper).getValue()+ " "+ DocName+ " "+ termLocalMap.get(termName);
+        bufferedWriter.write(termNameUpper+"@"+newDetails);
+        bufferedWriter.newLine();
         int setTotalAppear=termGlobalMap.get(termNameUpper).getValue()+termLocalMap.get(termName);//take counter of global and local
         dictionary.put(termNameUpper,new termData(2,1,termNameUpper,setTotalAppear));
         localDictionary.put(termNameUpper,newDetails);
