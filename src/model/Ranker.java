@@ -105,7 +105,7 @@ public class Ranker {
 
             }
             else{
-                TreeMap<String,Double> toAdd=new TreeMap<>();
+                HashMap<String,Double> toAdd=new HashMap<>();
                 toAdd.put(docName,score);
                 relevantDoc.put(nameQuery,toAdd);
             }

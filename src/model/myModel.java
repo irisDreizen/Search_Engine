@@ -50,20 +50,28 @@ public class myModel extends Observable implements IModel {
     }
 
 
-    public void callSearchOneQuery(String nameQuery, String notParsedquery) throws IOException {
-        String query = parseQuery(pathToRead,notParsedquery);
+    public void callSearchOneQuery(String nameQuery, String query) throws IOException {
+        query=parseQuery(pathToWrite,query);
         searche.RankDocs(nameQuery,query,index,pathToRead,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
     }
 
     public void callSearchManyQuery(String pathOfQueries) throws IOException {
-        TagsAndParseQuery_AndRank(pathOfQueries);
+        HashMap<String,Query> queries=TagsAndParseQuery_AndRank(pathOfQueries);
+        for(Map.Entry<String,Query> entry : queries.entrySet()){
+           String idQ=entry.getKey();//id
+            String desc=entry.getValue().getDescription();
+            String q=entry.getValue().getTitle()+" "+desc;
+            callSearchOneQuery(idQ,q);
+        }
+
+
     }
 
 
     public HashMap<String, Query> TagsAndParseQuery_AndRank(String pathOfQueries) throws IOException {
         HashMap<String, Query> queries = new HashMap<>();
         try {
-            Document query = Jsoup.parse(new File(pathOfQueries), "UTF-8");
+            Document query = Jsoup.parse(new File(pathOfQueries+"\\quries.txt"), "UTF-8");
             Elements allQueries = query.getElementsByTag("top");
             for (Element currQ : allQueries) {
                 //insert ID
@@ -87,7 +95,7 @@ public class myModel extends Observable implements IModel {
                     }
                     newDescQ = newDescQ + " " + s;
                 }
-                newDescQ = newDescQ.substring(11);
+                newDescQ = newDescQ.substring(13);
 
                 Query newQ = new Query(numQ, titleQ, newDescQ);
                 queries.put(numQ, newQ);
