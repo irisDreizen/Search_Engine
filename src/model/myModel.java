@@ -29,9 +29,11 @@ public class myModel extends Observable implements IModel {
   private   model.Indexer index;
    private HashMap<String, termData> dictionary;
    private Searcher searche= new Searcher();
-    public  HashMap<String,TreeMap<String,Double> >relevantDoc=new HashMap<>();
+    public  HashMap<String,Map<String,Double> >relevantDoc=new HashMap<>();
 
-
+    public HashMap<String,Map<String,Double>> getRankingMap(){
+        return relevantDoc;
+    }
 
     public void setToStem(boolean toStem) {
         this.toStem = toStem;
@@ -213,6 +215,8 @@ public String parseQuery(String pathToRead, String query) throws IOException {
         TableColumn lastNameCol = new TableColumn();
         lastNameCol.setText("appear");
         lastNameCol.setCellValueFactory(new PropertyValueFactory("totalApearance"));
+
+
 
 
 

@@ -5,9 +5,7 @@ import model.myModel;
 import model.termData;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 public class viewModel extends Observable implements Observer {
     private IModel model;
@@ -18,6 +16,9 @@ public class viewModel extends Observable implements Observer {
 
     public HashMap<String, termData> getDictionary() {
         return dictionary;
+    }
+    public HashMap<String, Map<String,Double>> getRankingMap(){
+        return model.getRenkingMap();
     }
 
     public viewModel(IModel model) {

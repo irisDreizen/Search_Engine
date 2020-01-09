@@ -37,7 +37,7 @@ public class Ranker {
 
 
 
-    public HashMap<String,TreeMap<String, Double>> collectLinesQuery(String nameQuery, String query, Indexer index,String pathToRead,HashMap<String,TreeMap<String,Double>> relevantDoc, double docAvg) throws IOException {
+    public HashMap<String,Map<String, Double>> collectLinesQuery(String nameQuery, String query, Indexer index,String pathToRead,HashMap<String,Map<String,Double>> relevantDoc, double docAvg) throws IOException {
 
         String[] splitedQuery=query.split(" ");
         int  numOfDOC=index.getP().getDocInfo().size();
@@ -74,7 +74,7 @@ public class Ranker {
 
 
 
-    public void BN25(String nameQuery,String postingLine, HashMap<String, TreeMap<String,Double>> relevantDoc,int numOfDoc,HashMap<String, DocDetails> DocInfo,double avg){
+    public void BN25(String nameQuery,String postingLine, HashMap<String, Map<String,Double>> relevantDoc,int numOfDoc,HashMap<String, DocDetails> DocInfo,double avg){
         String []st=postingLine.split("@");
         String []docAppear=st[2].split(" ");
         for(int i=0; i<docAppear.length; i=i+2){
