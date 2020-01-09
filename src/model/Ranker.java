@@ -30,6 +30,7 @@ public class Ranker {
 
     private HashMap<String, Double> weights;
     private boolean toUseSemantic;
+    private String query;
     private final String USER_AGENT = "Mozilla/5.0";
     public Ranker(boolean toUseSemantic) {
         weights=new HashMap<>();
@@ -37,13 +38,13 @@ public class Ranker {
     }
 
 
-    public HashMap<String,Map<String, Double>> collectLinesQuery(String nameQuery, String query, Indexer index,String pathToWrite,HashMap<String,Map<String,Double>> relevantDoc, double docAvg) throws IOException {
-
+    public HashMap<String,Map<String, Double>> collectLinesQuery(String nameQuery, String initialQuery, Indexer index,String pathToWrite,HashMap<String,Map<String,Double>> relevantDoc, double docAvg) throws Exception {
+        query=semantic(initialQuery);
         String[] splitedQuery=query.split(" ");
         int  numOfDOC=index.getP().getDocInfo().size();
         int sumTotalIdf=0;
 
-        File file3= new File(pathToWrite+"\\"+index.getPostingFileName_NoStem()+".txt");
+        File file3= new File(pathToWrite+"\\"+index.getPostingFileName_NoStem());
         String st="";
         String [] splitedPosting;
 
@@ -68,14 +69,14 @@ public class Ranker {
                 }
                 st=posting.readLine();
             }
-        for(Map.Entry<String,Map<String,Double>> entry : relevantDoc.entrySet() ){
-            Map<String,Double> needSorted=entry.getValue();
-            List<Double>  need = new ArrayList<>(needSorted.values());
-            Collections.sort(need);
-
-
-
-        }
+//        for(Map.Entry<String,Map<String,Double>> entry : relevantDoc.entrySet() ){
+//            Map<String,Double> needSorted=entry.getValue();
+//            List<Double>  need = new ArrayList<>(needSorted.values());
+//            Collections.sort(need);
+//
+//
+//
+//        }
         return relevantDoc;
         }
 
@@ -99,7 +100,7 @@ public class Ranker {
             //compute score for qi
             double partBScore= (tf*(1.3+1))/((1-0.75+0.75*(DocInfo.get(docName).getDocSize()/avg))+tf);
 
-            double score=(weights.get(st[0]))*idf*partBScore;
+            double score=(weights.get(st[0].toLowerCase()))*idf*partBScore;
             if(relevantDoc.containsKey(nameQuery)){
                if(relevantDoc.get(nameQuery).containsKey(docName)){
                   double scoreToAdd= relevantDoc.get(nameQuery).get(docName)+score;
@@ -126,9 +127,10 @@ public class Ranker {
         String newQuery = "";
         String [] splitedQuery = query.split(" ");
         for(String word:splitedQuery){
-            weights.put(word,(double)1);
+            weights.put(word.toLowerCase(),(double)1);
+            newQuery=newQuery+" "+word;
             if(toUseSemantic){
-                searchSynonym(word);
+                newQuery=newQuery+" "+ searchSynonym(word);
             }
         }
 
@@ -136,7 +138,8 @@ public class Ranker {
     }
 
 
-    public void searchSynonym(String wordToSearch) throws Exception {
+    public String searchSynonym(String wordToSearch) throws Exception {
+        String listOfSynonym="";
         String url = "https://api.datamuse.com/words?rel_syn=" + wordToSearch;
 
         URL obj = new URL(url);
@@ -165,28 +168,31 @@ public class Ranker {
                     mapper.getTypeFactory().constructCollectionType(ArrayList.class, Word.class)
             );
 
-            System.out.println("Synonym word of '" + wordToSearch + "':");
+    //        System.out.println("Synonym word of '" + wordToSearch + "':");
             if(words.size() > 0) {
                 for(Word word : words) {
                     if(word.getScore()>5000){
                         Double weight = Double.valueOf((1/2));
                         weights.put(word.getWord(), weight);
+                        listOfSynonym=listOfSynonym+" "+word.getWord();
                     }
                     else if(word.getScore()>1000){
                         Double weight = Double.valueOf((1/8));
                         weights.put(word.getWord(), weight);
+                        listOfSynonym=listOfSynonym+" "+word.getWord();
                     }
 
-                    System.out.println((words.indexOf(word) + 1) + ". " + word.getWord() + ", the score is:"+ word.getScore()+"");
+                  //  System.out.println((words.indexOf(word) + 1) + ". " + word.getWord() + ", the score is:"+ word.getScore()+"");
                 }
             }
             else {
-                System.out.println("none synonym word!");
+              //  System.out.println("none synonym word!");
             }
         }
         catch (IOException e) {
             e.getMessage();
         }
+        return listOfSynonym;
     }
 
     // word and score attributes are from DataMuse API

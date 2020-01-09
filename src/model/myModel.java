@@ -56,12 +56,12 @@ public class myModel extends Observable implements IModel {
     }
 
 
-    public void callSearchOneQuery(String nameQuery, String notParsedquery) throws IOException {
+    public void callSearchOneQuery(String nameQuery, String notParsedquery) throws Exception {
         String query = parseQuery(pathToWrite,notParsedquery);
         searche.RankDocs(nameQuery,query,index,pathToWrite,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
     }
 
-    public void callSearchManyQuery(String pathOfQueries) throws IOException {
+    public void callSearchManyQuery(String pathOfQueries) throws Exception {
         HashMap<String,Query> queries=TagsAndParseQuery_AndRank(pathOfQueries);
         for(Map.Entry<String,Query> entry : queries.entrySet()){
            String idQ=entry.getKey();//id

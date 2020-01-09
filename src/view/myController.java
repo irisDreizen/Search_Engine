@@ -66,13 +66,13 @@ public class myController implements Observer {
         myStage=primaryStage;
     }
 
-    public void callSearchOneQuery() throws IOException {
+    public void callSearchOneQuery() throws Exception {
         setToUseSemantics();
         this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery.getText());
         showQueries();
     }
 
-    public void callSearchManyQuery() throws IOException{
+    public void callSearchManyQuery() throws Exception {
         setToUseSemantics();
         String pathOfQueries = txtfld_pathForQuery.getText();
         myViewModel.callSearchManyQuery(pathOfQueries);
