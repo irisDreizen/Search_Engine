@@ -65,11 +65,13 @@ public class myController implements Observer {
 
     public void callSearchOneQuery() throws IOException {
         this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery.getText());
+        showQueries();
     }
 
     public void callSearchManyQuery() throws IOException{
         String pathOfQueries = txtfld_pathForQuery.getText();
         myViewModel.callSearchManyQuery(pathOfQueries);
+        showQueries();
     }
 
     public void loadQueryPath(){
@@ -193,7 +195,7 @@ public class myController implements Observer {
 
 
 
-    public void selectQueries(){
+    public void showQueries(){
         Stage stage = new Stage();
         stage.setTitle("Display Queries");
 
