@@ -37,13 +37,13 @@ public class Ranker {
 
 
 
-    public HashMap<String,Map<String, Double>> collectLinesQuery(String nameQuery, String query, Indexer index,String pathToRead,HashMap<String,Map<String,Double>> relevantDoc, double docAvg) throws IOException {
+    public HashMap<String,Map<String, Double>> collectLinesQuery(String nameQuery, String query, Indexer index,String pathToWrite,HashMap<String,Map<String,Double>> relevantDoc, double docAvg) throws IOException {
 
         String[] splitedQuery=query.split(" ");
         int  numOfDOC=index.getP().getDocInfo().size();
         int sumTotalIdf=0;
 
-        File file3= new File(pathToRead+"\\"+index.getPostingFileName_NoStem()+".txt");
+        File file3= new File(pathToWrite+"\\"+index.getPostingFileName_NoStem()+".txt");
         String st="";
         String [] splitedPosting;
 

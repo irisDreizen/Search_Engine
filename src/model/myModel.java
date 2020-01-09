@@ -51,8 +51,8 @@ public class myModel extends Observable implements IModel {
 
 
     public void callSearchOneQuery(String nameQuery, String notParsedquery) throws IOException {
-        String query = parseQuery(pathToRead,notParsedquery);
-        searche.RankDocs(nameQuery,query,index,pathToRead,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
+        String query = parseQuery(pathToWrite,notParsedquery);
+        searche.RankDocs(nameQuery,query,index,pathToWrite,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
     }
 
     public void callSearchManyQuery(String pathOfQueries) throws IOException {
@@ -82,8 +82,8 @@ public class myModel extends Observable implements IModel {
     }
 
 
-public String parseQuery(String pathToRead, String query) throws IOException {
-        QueryPraser queryPraser = new QueryPraser(pathToRead+"\\stop_words.txt");
+public String parseQuery(String pathToWrite, String query) throws IOException {
+        QueryPraser queryPraser = new QueryPraser(pathToWrite+"\\stop_words.txt");
         queryPraser.buildDictionary(query);
         HashMap<String, termData> newQuery =  queryPraser.getDictionary();
         String parsedQuery = "";

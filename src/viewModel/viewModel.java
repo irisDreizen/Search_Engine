@@ -18,7 +18,7 @@ public class viewModel extends Observable implements Observer {
         return dictionary;
     }
     public HashMap<String, Map<String,Double>> getRankingMap(){
-        return model.getRenkingMap();
+        return model.getRankingMap();
     }
 
     public viewModel(IModel model) {
