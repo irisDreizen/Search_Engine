@@ -18,4 +18,5 @@ public interface IModel {
     public void callSearchManyQuery(String pathOfQueries) throws IOException;
     public void setPathForQueries(String pathForQueries);
     public HashMap<String, Map<String,Double>> getRankingMap();
+    public void setToUseSemantics(boolean toUseSemantics);
 }

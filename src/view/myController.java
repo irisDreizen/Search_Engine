@@ -35,6 +35,7 @@ public class myController implements Observer {
     private String pathToWrite="";
     private String pathForQuery="";
     private boolean toStem=false;
+    private boolean toUseSemantic=false;
     HashMap<String, termData> dictionary;
 
     @FXML
@@ -43,10 +44,12 @@ public class myController implements Observer {
     public javafx.scene.control.TextField txtfld_singleQuery;
     public javafx.scene.control.TextField txtfld_pathForQuery;
     public javafx.scene.control.CheckBox check_stem;
+    public javafx.scene.control.CheckBox check_semantic;
     public javafx.scene.control.Button btn_dictionaryOn;
     public javafx.scene.control.Button btn_clearData;
     public javafx.scene.control.Button btn_showDictionary;
     public javafx.scene.control.Button btn_loadDictionary;
+
 
     @Override
     public void update(Observable o, Object arg) {
@@ -64,11 +67,13 @@ public class myController implements Observer {
     }
 
     public void callSearchOneQuery() throws IOException {
+        setToUseSemantics();
         this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery.getText());
         showQueries();
     }
 
     public void callSearchManyQuery() throws IOException{
+        setToUseSemantics();
         String pathOfQueries = txtfld_pathForQuery.getText();
         myViewModel.callSearchManyQuery(pathOfQueries);
         showQueries();
@@ -144,6 +149,16 @@ public class myController implements Observer {
         myViewModel.setToStem(toStem);
     }
 
+
+    public void setToUseSemantics() {
+        if(check_semantic.isSelected()){
+            toUseSemantic=true;
+        }
+        else{
+            toUseSemantic=false;
+        }
+        myViewModel.setToUseSemantics(toUseSemantic);
+    }
     public void setDictionary() throws IOException {
         File f1 = new File(txtfld_pathToRead.getText());
         if(!f1.exists()){

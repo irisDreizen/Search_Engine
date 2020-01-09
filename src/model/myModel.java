@@ -28,11 +28,17 @@ public class myModel extends Observable implements IModel {
    private boolean toStem=false;
   private   model.Indexer index;
    private HashMap<String, termData> dictionary;
-   private Searcher searche= new Searcher();
+   private boolean toUseSemantics = false;
+   private Searcher searche;
     public  HashMap<String,Map<String,Double> >relevantDoc=new HashMap<>();
 
     public HashMap<String,Map<String,Double>> getRankingMap(){
         return relevantDoc;
+    }
+
+    public void setToUseSemantics(boolean toUseSemantics) {
+        this.toUseSemantics = toUseSemantics;
+        searche= new Searcher(toUseSemantics);
     }
 
     public void setToStem(boolean toStem) {

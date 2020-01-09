@@ -234,6 +234,7 @@ public class Indexer {
             bw.write(entry.getKey()+"@"+entry.getValue().getDocSize()+"@"+entry.getValue().getMax_tf()+"@"+entry.getValue().getUniqeWords()+"@"+entry.getValue().getYeshutNumber());
             bw.newLine();
         }
+        bw.close();
 
     }
 
