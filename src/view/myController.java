@@ -185,12 +185,12 @@ public class myController implements Observer {
         myViewModel.showDictionary();
     }
     public void loadDictionary() throws IOException {
-        this.pathToRead = txtfld_pathToRead.getText();
+        this.pathToRead = txtfld_pathToWrite.getText();
         myViewModel.setPahToRead(pathToRead);
         this.pathToWrite = txtfld_pathToWrite.getText();
         myViewModel.setPathToWrite(pathToWrite);
         myViewModel.setToStem(toStem);
-        myViewModel.loadDictionary();
+        myViewModel.loadDictionary(pathToRead,pathToWrite);
     }
 
 

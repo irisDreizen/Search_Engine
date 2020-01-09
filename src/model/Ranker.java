@@ -68,6 +68,14 @@ public class Ranker {
                 }
                 st=posting.readLine();
             }
+        for(Map.Entry<String,Map<String,Double>> entry : relevantDoc.entrySet() ){
+            Map<String,Double> needSorted=entry.getValue();
+            List<Double>  need = new ArrayList<>(needSorted.values());
+            Collections.sort(need);
+
+
+
+        }
         return relevantDoc;
         }
 

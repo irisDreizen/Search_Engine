@@ -59,8 +59,8 @@ public class viewModel extends Observable implements Observer {
         model.clearData();
     }
 
-    public void loadDictionary() throws IOException {
-        model.loadDictionary(pahToRead,pathToWrite,toStem);
+    public void loadDictionary(String pathToRead1, String pathToWrite1) throws IOException {
+        model.loadDictionary(pathToRead1,pathToWrite1,toStem);
     }
     public void callSearchOneQuery(String nameQuery, String query) throws IOException {
         model.callSearchOneQuery(nameQuery,query);
