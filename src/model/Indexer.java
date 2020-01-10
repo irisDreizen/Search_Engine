@@ -38,6 +38,17 @@ public class Indexer {
         this.toStem=toStemUpdate;
 
     }
+    public Indexer(String pathToRead, String pathToWrite,Boolean toStemUpdate, boolean fictive) throws IOException {
+        stemmer = new PorterStemmer();
+        String newPathOfStopWords = pathToRead+"\\stop_words.txt";
+      //  this.bufferedWriter=new BufferedWriter(new FileWriter(pathToWrite+"\\enteties.txt"));
+        this.p = new Parse(newPathOfStopWords) ;
+        this.r = new ReadFile(pathToRead+"\\corpus");
+        this.pathToWrite=pathToWrite;
+        this.pathToRead=pathToRead;
+        this.toStem=toStemUpdate;
+
+    }
 
     public Parse getP() {
         if(p!=null){

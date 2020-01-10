@@ -220,7 +220,7 @@ public String parseQuery(String pathToWrite, String query) throws IOException {
 
     public void loadDictionary(String pathToRead1, String pathToWrite1, boolean toStem1) throws IOException {
          loadEnteties();
-        index=new model.Indexer(pathToRead1,pathToWrite1,toStem1);
+        index=new model.Indexer(pathToRead1,pathToWrite1,toStem1,true);
         index.loadDictionary();
         dictionary=index.getP().getDictionary();
 

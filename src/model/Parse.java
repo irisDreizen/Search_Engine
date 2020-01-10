@@ -39,6 +39,20 @@ public class Parse {
         this.bufferedWriter=bufferedWriter;
     }
 
+    public Parse(String stopWordsPath) throws IOException {
+        stemmer = new PorterStemmer();
+        toStem=false;
+        dictionary = new HashMap<String, termData>();
+        stopWords = new HashSet<>();
+        NotToCheckWord2=false;
+        monthList = new HashMap<>();
+        initializeMonthList(monthList);
+        insertStopWords(stopWordsPath);
+        DocInfo=new HashMap<>();
+        YeshutGlobalMap=new HashMap<>();
+        //this.bufferedWriter=bufferedWriter;
+    }
+
     public void setDocInfo(HashMap<String, DocDetails> docInfo) {
         DocInfo = docInfo;
     }
