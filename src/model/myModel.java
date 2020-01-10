@@ -31,7 +31,7 @@ public class myModel extends Observable implements IModel {
    private boolean toUseSemantics = false;
    private Searcher searche;
     public  HashMap<String,Map<String,Double> >relevantDoc=new HashMap<>();
-    private HashMap<String,HashMap<String,Integer>> enteties=new HashMap<>();
+    private HashMap<String,Map<String,Integer>> enteties=new HashMap<>();
 
     public HashMap<String,Map<String,Double>> getRankingMap(){
         return relevantDoc;
@@ -102,6 +102,30 @@ public class myModel extends Observable implements IModel {
 
         }
         relevantDoc = fix;
+    }
+    public Map<String, Integer> getEntitiesMap(String DocName){
+        return enteties.get(DocName);
+    }
+
+    public void writeQueryToDisk() throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(pathForQueries+"\\"+"results.txt"));
+        LinkedHashMap<String, Map<String, Double>> sortedDictionary = new LinkedHashMap<>();
+        relevantDoc.entrySet().stream().sorted(new Comparator<Map.Entry<String, Map<String, Double>>>() {
+            @Override
+            public int compare(Map.Entry<String, Map<String, Double>> o1, Map.Entry<String, Map<String, Double>> o2) {
+                return o1.getKey().compareToIgnoreCase(o2.getKey());
+            }
+
+
+        }).forEachOrdered(x->sortedDictionary.put(x.getKey(),x.getValue()));
+
+        for(Map.Entry<String, Map<String, Double>> queryId: sortedDictionary.entrySet()){
+            for(Map.Entry<String, Double> DocsAndScore: queryId.getValue().entrySet()){
+                writer.write(queryId.getKey()+" 0 "+DocsAndScore.getKey()+" 1 42.38 mt");
+                writer.newLine();
+            }
+        }
+        writer.close();
     }
 
 
@@ -230,6 +254,38 @@ public String parseQuery(String pathToWrite, String query) throws IOException {
             st1=bf.readLine();
         }
         bf.close();
+
+        HashMap<String,Map<String,Integer>> fix = new HashMap<>();
+        for (Map.Entry<String, Map<String, Integer>> entry : enteties.entrySet()) {
+            Map<String, Integer> temp = entry.getValue();
+            List<Map.Entry<String, Integer>> list =
+                    new LinkedList<Map.Entry<String, Integer>>(temp.entrySet());
+
+            // Sort the list
+            Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+                public int compare(Map.Entry<String, Integer> o1,
+                                   Map.Entry<String, Integer> o2) {
+                    return (o1.getValue()).compareTo(o2.getValue());
+                }
+            });
+
+            // put data from sorted list to hashmap
+            Map<String, Integer> temp2 = new HashMap<>();
+            if (list.size() > 5) {
+                for (int i = list.size() - 1; i >= list.size() - 5; i--) {
+                    temp2.put(list.get(i).getKey(), list.get(i).getValue());
+                }
+            } else {
+                for (int j = list.size() - 1; j >= 0; j--) {
+                    temp2.put(list.get(j).getKey(), list.get(j).getValue());
+                }
+
+            }
+            fix.put(entry.getKey(), temp2);
+
+
+        }
+        enteties = fix;
     }
 
 

@@ -68,14 +68,18 @@ public class myController implements Observer {
 
     public void callSearchOneQuery() throws Exception {
         setToUseSemantics();
+        myViewModel.setPahtForQueries(txtfld_pathToWrite.getText());
         this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery.getText());
+        this.myViewModel.writeQueryToDisk();
         showQueries();
     }
 
     public void callSearchManyQuery() throws Exception {
         setToUseSemantics();
         String pathOfQueries = txtfld_pathForQuery.getText();
+        myViewModel.setPahtForQueries(pathOfQueries);
         myViewModel.callSearchManyQuery(pathOfQueries);
+        this.myViewModel.writeQueryToDisk();
         showQueries();
     }
 
@@ -307,7 +311,7 @@ public class myController implements Observer {
                     {
                         btn.setOnAction((ActionEvent event) -> {
                             Map.Entry<String, Double> data = getTableView().getItems().get(getIndex());
-                            //selectDisplayEntities(model.getEntitiesMap(data.getKey()));
+                            showEntities(myViewModel.getEntitiesMap(data.getKey()));
                         });
                     }
 
@@ -332,9 +336,49 @@ public class myController implements Observer {
 
         dictionary.setItems(items);
         dictionary.getColumns().setAll(column1,column2,colBtn);
+        dictionary.getSortOrder().add(column2);
 
         Scene scene = new Scene(dictionary);
         stage.setScene(scene);
         stage.show();
     }
+
+    private void showEntities(Map<String,Integer> specificRankingMap){
+        Stage stage = new Stage();
+        stage.setTitle("Entities");
+
+
+        TableColumn<Map.Entry<String, Integer>, String> column1 = new TableColumn<>("Entity");
+        column1.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, Integer>, String>, ObservableValue<String>>() {
+
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, Integer>, String> p) {
+                // this callback returns property for just one cell, you can't use a loop here
+                // for first column we use key
+                return new SimpleObjectProperty<String>(p.getValue().getKey());
+            }
+        });
+
+        TableColumn<Map.Entry<String, Integer>,Integer> column2 = new TableColumn<>("Rank");
+        column2.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, Integer>, Integer>, ObservableValue<Integer>>() {
+
+            @Override
+            public ObservableValue<Integer> call(TableColumn.CellDataFeatures<Map.Entry<String, Integer>, Integer> p) {
+                // for second column we use value
+                return new SimpleObjectProperty<Integer>(p.getValue().getValue());
+            }
+        });
+
+        ObservableList<Map.Entry<String, Integer>> items = FXCollections.observableArrayList(specificRankingMap.entrySet());
+
+        TableView<Map.Entry<String,Integer>> dictionary = new TableView<>();
+
+        dictionary.setItems(items);
+        dictionary.getColumns().setAll(column1,column2);
+
+        Scene scene = new Scene(dictionary);
+        stage.setScene(scene);
+        stage.show();
+    }
+
 }

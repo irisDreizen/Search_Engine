@@ -69,4 +69,10 @@ public class viewModel extends Observable implements Observer {
     public void callSearchManyQuery(String pathOfQueries) throws Exception {
         model.callSearchManyQuery(pathOfQueries);
     }
+    public void writeQueryToDisk() throws IOException{
+        model.writeQueryToDisk();
+    }
+    public Map<String, Integer> getEntitiesMap(String DocName){
+        return model.getEntitiesMap(DocName);
+    }
 }

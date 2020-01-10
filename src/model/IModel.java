@@ -19,4 +19,6 @@ public interface IModel {
     public void setPathForQueries(String pathForQueries);
     public HashMap<String, Map<String,Double>> getRankingMap();
     public void setToUseSemantics(boolean toUseSemantics);
+    public void writeQueryToDisk() throws IOException;
+    public Map<String, Integer> getEntitiesMap(String DocName);
 }
