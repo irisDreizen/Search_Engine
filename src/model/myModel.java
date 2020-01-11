@@ -59,7 +59,7 @@ public class myModel extends Observable implements IModel {
 
     public void callSearchOneQuery(String nameQuery, String notParsedquery) throws Exception {
         String query = parseQuery(pathToWrite,notParsedquery);
-        searche.RankDocs(nameQuery,query,index,pathToWrite,relevantDoc,getDocAvg());//this should be changed, the input is the parsed query
+        searche.RankDocs(nameQuery,query,index,pathToWrite,relevantDoc,getDocAvg(), toStem);//this should be changed, the input is the parsed query
     }
 
     public void callSearchManyQuery(String pathOfQueries) throws Exception {

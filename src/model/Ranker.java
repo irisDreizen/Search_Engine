@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.util.Pair;
+import org.tartarus.snowball.ext.PorterStemmer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,19 +33,42 @@ public class Ranker {
     private boolean toUseSemantic;
     private String query;
     private final String USER_AGENT = "Mozilla/5.0";
+    PorterStemmer stemmer;
     public Ranker(boolean toUseSemantic) {
         weights=new HashMap<>();
         this.toUseSemantic=toUseSemantic;
+        this.stemmer=new PorterStemmer();
     }
 
 
-    public HashMap<String,Map<String, Double>> collectLinesQuery(String nameQuery, String initialQuery, Indexer index,String pathToWrite,HashMap<String,Map<String,Double>> relevantDoc, double docAvg) throws Exception {
-        query=semantic(initialQuery);
+    public HashMap<String,Map<String, Double>> collectLinesQuery(String nameQuery, String initialQuery, Indexer index,String pathToWrite,HashMap<String,Map<String,Double>> relevantDoc, double docAvg, boolean toStem) throws Exception {
+        if(toStem){
+            String fixedInitialQuery="";
+            String [] s = initialQuery.split(" ");
+            for(int i=0; i<s.length; i++){
+                String d= s[i];
+                stemmer.setCurrent(d); //set string you need to stem
+                stemmer.stem();  //stem the word
+                fixedInitialQuery=fixedInitialQuery+stemmer.getCurrent()+" ";//get the stemmed word
+
+            }
+            query=semantic(fixedInitialQuery);
+        }
+        else{
+            query=semantic(initialQuery);
+        }
+        //query=semantic(initialQuery);
         String[] splitedQuery=query.split(" ");
         int  numOfDOC=index.getP().getDocInfo().size();
         int sumTotalIdf=0;
+        File file3;
+       if(toStem){
+          file3= new File(pathToWrite+"\\"+index.getPostingFileName_WithStem());
+       }
+       else{
+           file3= new File(pathToWrite+"\\"+index.getPostingFileName_NoStem());
+       }
 
-        File file3= new File(pathToWrite+"\\"+index.getPostingFileName_NoStem());
         String st="";
         String [] splitedPosting;
 
@@ -59,6 +83,14 @@ public class Ranker {
         while (st!=null) {
                 for (int i = 0; i < splitedQuery.length; i++) {
                     splitedPosting = st.split("@");
+                    if(toStem){
+                        if(!splitedQuery[i].equals("")){
+                            String d= splitedQuery[i];
+                            stemmer.setCurrent(d); //set string you need to stem
+                            stemmer.stem();  //stem the word
+                            splitedQuery[i]= stemmer.getCurrent();//get the stemmed word
+                        }
+                    }
                     if (splitedPosting[0].toLowerCase().equals(splitedQuery[i].toLowerCase())) {
                         investigate=investigate+st;
                         BN25(nameQuery,investigate,relevantDoc,numOfDOC,index.getP().getDocInfo(),docAvg);
@@ -136,7 +168,9 @@ public class Ranker {
                 newQuery=newQuery+" "+ searchSynonym(word);
             }
         }
-
+        System.out.println("i finished with semantic part");
+        System.out.println("my old query is:"+query);
+        System.out.println("my new query is:"+newQuery);
         return newQuery;
     }
 
@@ -171,7 +205,7 @@ public class Ranker {
                     mapper.getTypeFactory().constructCollectionType(ArrayList.class, Word.class)
             );
 
-    //        System.out.println("Synonym word of '" + wordToSearch + "':");
+           System.out.println("Synonym word of '" + wordToSearch + "':");
             if(words.size() > 0) {
                 for(Word word : words) {
                     if(word.getScore()>5000){
@@ -185,11 +219,11 @@ public class Ranker {
                         listOfSynonym=listOfSynonym+" "+word.getWord();
                     }
 
-                  //  System.out.println((words.indexOf(word) + 1) + ". " + word.getWord() + ", the score is:"+ word.getScore()+"");
+                    System.out.println((words.indexOf(word) + 1) + ". " + word.getWord() + ", the score is:"+ word.getScore()+"");
                 }
             }
             else {
-              //  System.out.println("none synonym word!");
+                System.out.println("none synonym word!");
             }
         }
         catch (IOException e) {

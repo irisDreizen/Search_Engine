@@ -68,6 +68,7 @@ public class myController implements Observer {
 
     public void callSearchOneQuery() throws Exception {
         setToUseSemantics();
+        setToStem();
         myViewModel.setPahtForQueries(txtfld_pathToWrite.getText());
         this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery.getText());
         this.myViewModel.writeQueryToDisk();
