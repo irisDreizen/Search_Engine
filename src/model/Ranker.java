@@ -90,12 +90,15 @@ public class Ranker {
             String docName=docAppear[i];
             int numOfAppear=Integer.parseInt(docAppear[i+1]);
             //compute tf
-            double tf=(double) numOfAppear/(DocInfo.get(docName).getMax_tf());
+           // double tf=(double) numOfAppear/(DocInfo.get(docName).getMax_tf());
+            //try 2 more options
+            double tf=(double) numOfAppear;
 
             double numOfDocCurrenQuery=docAppear.length/2;
 
             //conpute idf
             double idf=Math.log((numOfDoc-numOfDocCurrenQuery+0.5)/(numOfDocCurrenQuery+0.5));
+            //try one more option from class
 
             //compute score for qi
             double partBScore= (tf*(1.3+1))/((1-0.75+0.75*(DocInfo.get(docName).getDocSize()/avg))+tf);

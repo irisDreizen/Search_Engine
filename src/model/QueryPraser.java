@@ -444,6 +444,12 @@ public class QueryPraser {
 
 
     public void addUpperLowerLetter(String word1, HashMap<String, Integer> docmap) {
+        if(word1.contains("-")){
+            String [] splitedWord = word1.split("-");
+            for(int i=0; i<splitedWord.length;i++){
+                addToDictionary(splitedWord[i],docmap);
+            }
+        }
         if(word1.equals("and")){
             System.out.println("i'm and - and i am in upperLowerLetter");
         }
@@ -606,15 +612,27 @@ public class QueryPraser {
                 int numOfSuspected =howMuchSuspectedWords(word1,word2,word3,word4);
                 if(numOfSuspected>1){
                     if(numOfSuspected==2){
+                        addToDictionary(word1,docMap);
+                        addToDictionary(word2,docMap);
                         word1=word1+" "+word2;
+                        addToDictionary(word1,docMap);
                         i++;
                     }
                     else if(numOfSuspected==3){
+                        addToDictionary(word1,docMap);
+                        addToDictionary(word2,docMap);
+                        addToDictionary(word3,docMap);
                         word1=word1+" "+word2+" "+word3;
+                        addToDictionary(word1,docMap);
                         i=i+2;
                     }
                     else if(numOfSuspected==4){
+                        addToDictionary(word1,docMap);
+                        addToDictionary(word2,docMap);
+                        addToDictionary(word3,docMap);
+                        addToDictionary(word4,docMap);
                         word1=word1+" "+word2+" "+word3+" "+word4;
+                        addToDictionary(word1,docMap);
                         i=i+3;
                     }
 
@@ -643,8 +661,13 @@ public class QueryPraser {
                     if(word1.contains("-")){
                         word1=word1.toUpperCase();
                         addToDictionary(word1,docMap);
+                        String[] splitedWord = word1.split("-");
+                        for(int j=0;j<splitedWord.length; j++){
+                            addToDictionary(splitedWord[j], docMap);
+                        }
                         continue;
                     }
+
 
                     //try{
                     if(word1.charAt(word1.length()-1)=='f' ||word1.charAt(word1.length()-1)=='F'|| word1.charAt(word1.length()-1)=='d'|| word1.charAt(word1.length()-1)=='D'){

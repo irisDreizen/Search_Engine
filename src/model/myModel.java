@@ -104,6 +104,14 @@ public class myModel extends Observable implements IModel {
         relevantDoc = fix;
     }
     public Map<String, Integer> getEntitiesMap(String DocName){
+        if(!enteties.containsKey(DocName)){
+            Map<String,Integer> t = new HashMap<>();
+            return t;
+        }
+        if(enteties.get(DocName)==null){
+            Map<String,Integer> t = new HashMap<>();
+            return t;
+        }
         return enteties.get(DocName);
     }
 
