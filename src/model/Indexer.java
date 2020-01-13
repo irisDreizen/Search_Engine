@@ -99,7 +99,13 @@ public class Indexer {
     public HashMap<String, DocDetails> loadDocDetails(String pathToWrite) throws IOException {
         HashMap<String, DocDetails> DocDetailsMap = new HashMap<>();
         File f;
-        f=new File(pathToWrite+"\\" + "DocInfo" + ".txt");
+        if(toStem){
+            f=new File(pathToWrite+"\\" + "DocInfo_stem" + ".txt");
+        }
+        else{
+            f=new File(pathToWrite+"\\" + "DocInfo_noStem" + ".txt");
+        }
+
         if(!f.exists()){
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"this is a wrong path");
             Optional<ButtonType> result = alert.showAndWait();
@@ -245,10 +251,10 @@ public class Indexer {
     public void writeDocInfoFile(String pathToWrite, boolean toStem) throws IOException {
         File file=null;
         if(toStem){
-            file = new File(pathToWrite+"\\" + "DocInfo" + ".txt");
+            file = new File(pathToWrite+"\\" + "DocInfo_stem" + ".txt");
         }
         else{
-
+            file = new File(pathToWrite+"\\" + "DocInfo_noStem" + ".txt");
         }
 
         FileWriter fw= new FileWriter(file);

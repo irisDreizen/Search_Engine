@@ -54,7 +54,7 @@ public class Ranker {
                 fixedInitialQuery=fixedInitialQuery+stemmer.getCurrent()+" ";//get the stemmed word
 
             }
-            query=semantic(fixedInitialQuery,onLine,toStem);
+            query=semantic(fixedInitialQuery,onLine,toStem);//stemmed query
         }
         else{
             query=semantic(initialQuery,onLine,toStem);
@@ -85,14 +85,14 @@ public class Ranker {
         while (st!=null) {
                 for (int i = 0; i < splitedQuery.length; i++) {
                     splitedPosting = st.split("@");
-                    if(toStem){
-                        if(!splitedQuery[i].equals("")){
-                            String d= splitedQuery[i];
-                            stemmer.setCurrent(d); //set string you need to stem
-                            stemmer.stem();  //stem the word
-                            splitedQuery[i]= stemmer.getCurrent();//get the stemmed word
-                        }
-                    }
+//                    if(toStem){
+//                        if(!splitedQuery[i].equals("")){
+//                            String d= splitedQuery[i];
+//                            stemmer.setCurrent(d); //set string you need to stem
+//                            stemmer.stem();  //stem the word
+//                            splitedQuery[i]= stemmer.getCurrent();//get the stemmed word
+//                        }
+//                    }
                     if (splitedPosting[0].toLowerCase().equals(splitedQuery[i].toLowerCase())) {
                         investigate=investigate+st;
                         BN25(nameQuery,investigate,relevantDoc,numOfDOC,index.getP().getDocInfo(),docAvg);
@@ -140,10 +140,10 @@ public class Ranker {
 //            }
             double partBScore= (tf*(1.3+1))/((1-0.75+0.75*(DocInfo.get(docName).getDocSize()/avg))+tf);
 
-//            if(!weights.containsKey(st[0])){
-//                System.out.println("i don't have word "+st[0]+" in weights hashMap");
-//                System.out.println("i'm in doc:"+docName);
-//            }
+            if(!weights.containsKey(st[0].toLowerCase())){
+                System.out.println("i don't have word "+st[0]+" in weights hashMap");
+                System.out.println("i'm in doc:"+docName);
+            }
             double score=(weights.get(st[0].toLowerCase()))*idf*partBScore;
 
             if(relevantDoc.containsKey(nameQuery)){
@@ -171,31 +171,31 @@ public class Ranker {
     public String semantic(String query,boolean onLine,boolean toStem) throws Exception {
         String newQuery = "";
         String [] splitedQuery = query.split(" ");
-        for(String word:splitedQuery){
-            if(toStem){
-                String d= word;
-                stemmer.setCurrent(d); //set string you need to stem
-                stemmer.stem();  //stem the word
-                d= stemmer.getCurrent();//get the stemmed word
-                weights.put(d.toLowerCase(), (double)1);
-            }
-            else{
+        for(String word:splitedQuery){//all the words here are after stemming (if needed)
+//            if(toStem){
+//                String d= word;
+//                stemmer.setCurrent(d); //set string you need to stem
+//                stemmer.stem();  //stem the word
+//                d= stemmer.getCurrent();//get the stemmed word
+//                weights.put(d.toLowerCase(), (double)1);
+//            }
+        //    else{
                 weights.put(word.toLowerCase(),(double)1);
-            }
+           // }
             newQuery=newQuery+" "+word;
             if(toUseSemantic){
-                String temp=word;
-                if(toStem){
-                    String d= word;
-                    stemmer.setCurrent(d); //set string you need to stem
-                    stemmer.stem();  //stem the word
-                    temp= stemmer.getCurrent();//get the stemmed word
-                }
+//                String temp=word;
+//                if(toStem){
+//                    String d= word;
+//                    stemmer.setCurrent(d); //set string you need to stem
+//                    stemmer.stem();  //stem the word
+//                    temp= stemmer.getCurrent();//get the stemmed word
+//                }
                 if(onLine){
-                    newQuery=newQuery+" "+ searchSynonym(temp);
+                    newQuery=newQuery+" "+ searchSynonym(word,toStem);
                 }
                 else{
-                    newQuery=newQuery+" "+searchSynonimOffLine(temp);
+                    newQuery=newQuery+" "+searchSynonimOffLine(word,toStem);
                 }
 
             }
@@ -206,7 +206,7 @@ public class Ranker {
         return newQuery;
     }
 
-    public String searchSynonimOffLine(String wordToSearch){
+    public String searchSynonimOffLine(String wordToSearch, boolean toStem){
         Word2VecModel Model = null;
         String listOfSynonym="";
 
@@ -228,9 +228,16 @@ public class Ranker {
             String s= match.match();
 
             if(!wordToSearch.equals(s)){
+                if(toStem){
+                    stemmer.setCurrent(s); //set string you need to stem
+                    stemmer.stem();  //stem the word
+                    s= stemmer.getCurrent();//get the stemmed word
+                }
                 listOfSynonym=listOfSynonym+s+" ";
-                weights.put(s,0.5);
-                System.out.println("i added to weights the word:"+s);
+                if(!s.contains(" ")){
+                    weights.put(s,0.5);
+                    System.out.println("i added to weights the word:"+s);
+                }
             }
         }
 
@@ -240,7 +247,7 @@ public class Ranker {
 
         return listOfSynonym;
     }
-    public String searchSynonym(String wordToSearch) throws Exception {
+    public String searchSynonym(String wordToSearch, boolean toStem) throws Exception {
         String listOfSynonym="";
         String url = "https://api.datamuse.com/words?rel_syn=" + wordToSearch;
 
@@ -274,17 +281,50 @@ public class Ranker {
             if(words.size() > 0) {
                 for(Word word : words) {
                     if(word.getScore()>5000){
-                        Double weight = Double.valueOf((1/2));
-                        weights.put(word.getWord(), weight);
-                        listOfSynonym=listOfSynonym+" "+word.getWord();
+                        Double weight = 0.5;
+                        if (toStem) {
+                            String d= word.getWord();
+                            stemmer.setCurrent(d); //set string you need to stem
+                            stemmer.stem();  //stem the word
+                             d= stemmer.getCurrent();//get the stemmed word
+                            if(!d.contains(" ")){
+                                weights.put(d,weight);
+                                listOfSynonym=listOfSynonym+" "+d;
+                            }
+                        }
+                        else{
+                            if(!word.getWord().contains(" ")){
+                                weights.put(word.getWord(), weight);
+                                listOfSynonym=listOfSynonym+" "+word.getWord();
+                            }
+                        }
+
                     }
                     else if(word.getScore()>1000){
-                        Double weight = Double.valueOf((1/8));
-                        weights.put(word.getWord(), weight);
-                        listOfSynonym=listOfSynonym+" "+word.getWord();
+                        Double weight = 0.2;
+                        if (toStem) {
+                            String d= word.getWord();
+                            stemmer.setCurrent(d); //set string you need to stem
+                            stemmer.stem();  //stem the word
+                            d= stemmer.getCurrent();//get the stemmed word
+                            if(!d.contains(" ")){
+                                weights.put(d,weight);
+                                listOfSynonym=listOfSynonym+" "+d;
+                                System.out.println("stemmer - add word:"+d);
+                            }
+                        }
+                        else{
+                            if(!word.getWord().contains(" ")){
+                                weights.put(word.getWord(), weight);
+                                listOfSynonym=listOfSynonym+" "+word.getWord();
+                            }
+                        }
+
+//                        weights.put(word.getWord(), weight);
+//                        listOfSynonym=listOfSynonym+" "+word.getWord();
                     }
 
-                    System.out.println((words.indexOf(word) + 1) + ". " + word.getWord() + ", the score is:"+ word.getScore()+"");
+                   // System.out.println((words.indexOf(word) + 1) + ". " + word.getWord() + ", the score is:"+ word.getScore()+"");
                 }
             }
             else {
