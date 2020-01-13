@@ -14,8 +14,8 @@ public interface IModel {
     public HashMap<String, termData> getDictionary();
     public void showDictionary();
     public void loadDictionary(String pathToRead1, String pathToWrite1, boolean toStem1) throws IOException;
-    public void callSearchOneQuery(String nameQuery, String query) throws Exception;
-    public void callSearchManyQuery(String pathOfQueries) throws Exception;
+    public void callSearchOneQuery(String nameQuery, String query, boolean onLine) throws Exception;
+    public void callSearchManyQuery(String pathOfQueries, boolean onLine) throws Exception;
     public void setPathForQueries(String pathForQueries);
     public HashMap<String, Map<String,Double>> getRankingMap();
     public void setToUseSemantics(boolean toUseSemantics);

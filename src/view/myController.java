@@ -43,6 +43,8 @@ public class myController implements Observer {
     public javafx.scene.control.TextField txtfld_pathToWrite;
     public javafx.scene.control.TextField txtfld_singleQuery;
     public javafx.scene.control.TextField txtfld_pathForQuery;
+    public javafx.scene.control.TextField txtfld_singleQuery_offline;
+    public javafx.scene.control.TextField txtfld_pathForQuery_offLine;
     public javafx.scene.control.CheckBox check_stem;
     public javafx.scene.control.CheckBox check_semantic;
     public javafx.scene.control.Button btn_dictionaryOn;
@@ -66,20 +68,37 @@ public class myController implements Observer {
         myStage=primaryStage;
     }
 
-    public void callSearchOneQuery() throws Exception {
+    public void callSearchOneQuery_offLine() throws Exception {
         setToUseSemantics();
         setToStem();
         myViewModel.setPahtForQueries(txtfld_pathToWrite.getText());
-        this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery.getText());
+        this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery_offline.getText(),false);
         this.myViewModel.writeQueryToDisk();
         showQueries();
     }
-
-    public void callSearchManyQuery() throws Exception {
+    public void callSearchOneQuery_onLine() throws Exception {
         setToUseSemantics();
+        setToStem();
+        myViewModel.setPahtForQueries(txtfld_pathToWrite.getText());
+        this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery.getText(),true);
+        this.myViewModel.writeQueryToDisk();
+        showQueries();
+    }
+    public void callSearchManyQuery_offLine() throws Exception {
+        setToUseSemantics();
+        setToStem();
+        String pathOfQueries = txtfld_pathForQuery_offLine.getText();
+        myViewModel.setPahtForQueries(pathOfQueries);
+        myViewModel.callSearchManyQuery(pathOfQueries,false);
+        this.myViewModel.writeQueryToDisk();
+        showQueries();
+    }
+    public void callSearchManyQuery_onLine() throws Exception {
+        setToUseSemantics();
+        setToStem();
         String pathOfQueries = txtfld_pathForQuery.getText();
         myViewModel.setPahtForQueries(pathOfQueries);
-        myViewModel.callSearchManyQuery(pathOfQueries);
+        myViewModel.callSearchManyQuery(pathOfQueries,true);
         this.myViewModel.writeQueryToDisk();
         showQueries();
     }

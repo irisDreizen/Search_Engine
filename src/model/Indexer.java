@@ -234,7 +234,7 @@ public class Indexer {
         posting(local_dictionary2,pathToWrite);
 
          MergePostingFiles(pathToWrite);
-         writeDocInfoFile(pathToWrite);
+         writeDocInfoFile(pathToWrite,toStem);
          copyStopWords(pathToRead,pathToWrite);
          bufferedWriter.close();
      //   System.out.println(p.getDictionary().size());
@@ -242,8 +242,15 @@ public class Indexer {
 
     }
 
-    public void writeDocInfoFile(String pathToWrite) throws IOException {
-        File file = new File(pathToWrite+"\\" + "DocInfo" + ".txt");
+    public void writeDocInfoFile(String pathToWrite, boolean toStem) throws IOException {
+        File file=null;
+        if(toStem){
+            file = new File(pathToWrite+"\\" + "DocInfo" + ".txt");
+        }
+        else{
+
+        }
+
         FileWriter fw= new FileWriter(file);
         BufferedWriter bw= new BufferedWriter(fw);
         for(Map.Entry<String,DocDetails> entry : p.getDocInfo().entrySet()){

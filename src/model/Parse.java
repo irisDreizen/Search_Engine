@@ -11,12 +11,12 @@ public class Parse {
     private HashMap<String, termData> dictionary;
     private HashSet<String> stopWords;
     private boolean NotToCheckWord2;
-    private boolean NotToCheckWord3=false;
-    private boolean NotToCheckWord4=false;
-    private HashMap<String,String> monthList;
-    private int pointerLines=1;
+    private boolean NotToCheckWord3 = false;
+    private boolean NotToCheckWord4 = false;
+    private HashMap<String, String> monthList;
+    private int pointerLines = 1;
     private HashMap<String, DocDetails> DocInfo;
-    private HashMap<String, Pair<String,Integer>> YeshutGlobalMap;
+    private HashMap<String, Pair<String, Integer>> YeshutGlobalMap;
     private boolean toStem;
     PorterStemmer stemmer;
     private BufferedWriter bufferedWriter;
@@ -27,29 +27,29 @@ public class Parse {
 
     public Parse(String stopWordsPath, BufferedWriter bufferedWriter) throws IOException {
         stemmer = new PorterStemmer();
-        toStem=false;
+        toStem = false;
         dictionary = new HashMap<String, termData>();
         stopWords = new HashSet<>();
-        NotToCheckWord2=false;
+        NotToCheckWord2 = false;
         monthList = new HashMap<>();
         initializeMonthList(monthList);
         insertStopWords(stopWordsPath);
-        DocInfo=new HashMap<>();
-        YeshutGlobalMap=new HashMap<>();
-        this.bufferedWriter=bufferedWriter;
+        DocInfo = new HashMap<>();
+        YeshutGlobalMap = new HashMap<>();
+        this.bufferedWriter = bufferedWriter;
     }
 
     public Parse(String stopWordsPath) throws IOException {
         stemmer = new PorterStemmer();
-        toStem=false;
+        toStem = false;
         dictionary = new HashMap<String, termData>();
         stopWords = new HashSet<>();
-        NotToCheckWord2=false;
+        NotToCheckWord2 = false;
         monthList = new HashMap<>();
         initializeMonthList(monthList);
         insertStopWords(stopWordsPath);
-        DocInfo=new HashMap<>();
-        YeshutGlobalMap=new HashMap<>();
+        DocInfo = new HashMap<>();
+        YeshutGlobalMap = new HashMap<>();
         //this.bufferedWriter=bufferedWriter;
     }
 
@@ -62,23 +62,24 @@ public class Parse {
         return DocInfo;
     }
 
-    public void clearDictionary(){
-        if(dictionary!=null){
+    public void clearDictionary() {
+        if (dictionary != null) {
             dictionary.clear();
         }
 
     }
 
-    public void clearDocInfo(){
-        if(DocInfo!=null){
+    public void clearDocInfo() {
+        if (DocInfo != null) {
             DocInfo.clear();
         }
 
     }
 
-    public int getDocInfoSize(){
+    public int getDocInfoSize() {
         return getDocInfo().size();
     }
+
     public void initializeMonthList(HashMap<String, String> monthList) {
         monthList.put("January", "01");
         monthList.put("February", "02");
@@ -128,8 +129,8 @@ public class Parse {
         String st;
         while ((st = br.readLine()) != null) {
             stopWords.add(st);
-            if(st.charAt(0)>='a'&&st.charAt(0)<='z'){
-                st=st.substring(0, 1).toUpperCase() + st.substring(1);
+            if (st.charAt(0) >= 'a' && st.charAt(0) <= 'z') {
+                st = st.substring(0, 1).toUpperCase() + st.substring(1);
             }
             stopWords.add(st);
             stopWords.add(st.toUpperCase());
@@ -141,50 +142,46 @@ public class Parse {
         return dictionary;
     }
 
-    public void addMonthNumbersFirst(String word1, String word2, HashMap<String,Integer> docmap){
-        String wordToDictionary="";
-        if(word1.length()==2){
-            wordToDictionary=monthList.get(word2)+"-"+word1;
+    public void addMonthNumbersFirst(String word1, String word2, HashMap<String, Integer> docmap) {
+        String wordToDictionary = "";
+        if (word1.length() == 2) {
+            wordToDictionary = monthList.get(word2) + "-" + word1;
+        } else {
+            wordToDictionary = monthList.get(word2) + "-" + "0" + word1;
         }
-        else{
-            wordToDictionary=monthList.get(word2)+"-"+"0"+word1;
-        }
-        addToDictionary(wordToDictionary,docmap);
-        NotToCheckWord2=true;
+        addToDictionary(wordToDictionary, docmap);
+        NotToCheckWord2 = true;
     }
 
-    public void addMonth_MonthFirst(String word1, String word2, HashMap<String,Integer> docmap){
-        String wordToDictionary="";
-        if(word2.length()<=2){//in case of month+date
-            if(word2.length()==2){//in case of month+date with 2 characters
-                wordToDictionary=monthList.get(word1)+"-"+word2;
-            }
-            else{//in case of date with 1 character
-                wordToDictionary=monthList.get(word1)+"-"+"0"+word2;
+    public void addMonth_MonthFirst(String word1, String word2, HashMap<String, Integer> docmap) {
+        String wordToDictionary = "";
+        if (word2.length() <= 2) {//in case of month+date
+            if (word2.length() == 2) {//in case of month+date with 2 characters
+                wordToDictionary = monthList.get(word1) + "-" + word2;
+            } else {//in case of date with 1 character
+                wordToDictionary = monthList.get(word1) + "-" + "0" + word2;
             }
 
-        }
-        else if(word2.length()==4){//in case of month+year
-          wordToDictionary=word2+"-"+monthList.get(word1);
-        }
-        else{
-            addToDictionary(word1.toUpperCase(),docmap);
-            addToDictionary(word2.toUpperCase(),docmap);
+        } else if (word2.length() == 4) {//in case of month+year
+            wordToDictionary = word2 + "-" + monthList.get(word1);
+        } else {
+            addToDictionary(word1.toUpperCase(), docmap);
+            addToDictionary(word2.toUpperCase(), docmap);
             NotToCheckWord2 = true;
-           return;
+            return;
         }
 
         addToDictionary(wordToDictionary, docmap);
         NotToCheckWord2 = true;
     }
 
-    public void addToDictionary(String newWord, HashMap<String,Integer> docmap) {
-        if(newWord.length()==0){
+    public void addToDictionary(String newWord, HashMap<String, Integer> docmap) {
+        if (newWord.length() == 0) {
             return;
         }
 
         if (!dictionary.containsKey(newWord)) {
-            dictionary.put(newWord, new termData(1, pointerLines,newWord,1));
+            dictionary.put(newWord, new termData(1, pointerLines, newWord, 1));
             pointerLines++;
             if (!docmap.containsKey(newWord)) {
                 docmap.put(newWord, 1);
@@ -192,13 +189,13 @@ public class Parse {
 
         } else {
             int currentAppear = dictionary.get(newWord).getTotalApearance();
-            dictionary.get(newWord).setTotalApearance(currentAppear+1);
+            dictionary.get(newWord).setTotalApearance(currentAppear + 1);
             if (!docmap.containsKey(newWord)) {
                 docmap.put(newWord, 1);
                 int newCounter = dictionary.get(newWord).getNumOfDoc();
                 newCounter++;
                 int pointer = dictionary.get(newWord).getPointerLine();
-                dictionary.replace(newWord, new termData(newCounter, pointer,newWord,currentAppear+1));
+                dictionary.replace(newWord, new termData(newCounter, pointer, newWord, currentAppear + 1));
             } else {
                 int newCounter = docmap.get(newWord);
                 newCounter++;
@@ -207,27 +204,27 @@ public class Parse {
             }
         }
 
-      //System.out.println(newWord);
+        //System.out.println(newWord);
 
     }
 
 
-    public boolean checkIfFriction(String s){
-        for(int i=0; i<s.length()-1; i++){
-            if(s.charAt(i)=='/'){
+    public boolean checkIfFriction(String s) {
+        for (int i = 0; i < s.length() - 1; i++) {
+            if (s.charAt(i) == '/') {
                 return true;
             }
-            if(!(s.charAt(i)>='0'&&s.charAt(i)<='9')){
+            if (!(s.charAt(i) >= '0' && s.charAt(i) <= '9')) {
                 return false;
             }
         }
         return false;
     }
 
-    public boolean checkIfPercent(String word2){
-        if(word2.equals("percent") || word2.equals("percentage")){
-            NotToCheckWord2=true;
-           return true;
+    public boolean checkIfPercent(String word2) {
+        if (word2.equals("percent") || word2.equals("percentage")) {
+            NotToCheckWord2 = true;
+            return true;
         }
         return false;
     }
@@ -268,84 +265,80 @@ public class Parse {
         }
 
 
-
-
-
         double newNumberDouble;
-        try{
+        try {
             newNumberDouble = Double.parseDouble(newNumber);
 
-        if (newNumberDouble >= 1000 && newNumberDouble < 1000000) {
-            newNumberDouble = newNumberDouble / 1000;
-            wordToDictionary = newNumberDouble +" K";
+            if (newNumberDouble >= 1000 && newNumberDouble < 1000000) {
+                newNumberDouble = newNumberDouble / 1000;
+                wordToDictionary = newNumberDouble + " K";
 
-        } else if (newNumberDouble >= 1000000 && newNumberDouble < 1000000000) {
-            newNumberDouble = newNumberDouble / 1000000;
-            String tempMilion = newNumberDouble + "";
-            String[] tempMilionSplit = tempMilion.split("\\.");
-            if (tempMilionSplit.length == 0) {
-                tempMilionSplit = new String[2];
-                tempMilionSplit[0] = tempMilion;
-                tempMilionSplit[1] = "";
-            }
-            if (tempMilionSplit[1].length() <= 3) {
-                wordToDictionary = wordToDictionary + tempMilionSplit[0] + "." + tempMilionSplit[1] + " M";
-            } else {
-                wordToDictionary = wordToDictionary + tempMilionSplit[0] + "." + tempMilionSplit[1].substring(0, 3) + " M";
-            }
-
-        } else if (newNumberDouble >= 1000000000) {
-            newNumberDouble = newNumberDouble / 1000000000;
-            String tempMilion = newNumberDouble + "";
-            String[] tempMilionSplit = tempMilion.split("\\.");
-            if (tempMilionSplit.length == 0) {
-                tempMilionSplit = new String[2];
-                tempMilionSplit[0] = tempMilion;
-                tempMilionSplit[1] = "";
-            }
-            if (tempMilionSplit[1].length() <= 3) {
-                wordToDictionary = wordToDictionary + tempMilionSplit[0] + "." + tempMilionSplit[1] + " B";
-            } else {
-                wordToDictionary = wordToDictionary + tempMilionSplit[0] + "." + tempMilionSplit[1].substring(0, 3) + " B";
-            }
-
-        } else {// its a number smaller than 1000
-            if (splitByDot.length > 1) {//there is something after the dot
-                if (splitByDot[1].length() <= 3) {
-                    wordToDictionary = wordToDictionary + splitByDot[0] + "." + splitByDot[1];
-                } else {
-                    wordToDictionary = wordToDictionary + splitByDot[0] + "." + splitByDot[1].substring(0, 3);
+            } else if (newNumberDouble >= 1000000 && newNumberDouble < 1000000000) {
+                newNumberDouble = newNumberDouble / 1000000;
+                String tempMilion = newNumberDouble + "";
+                String[] tempMilionSplit = tempMilion.split("\\.");
+                if (tempMilionSplit.length == 0) {
+                    tempMilionSplit = new String[2];
+                    tempMilionSplit[0] = tempMilion;
+                    tempMilionSplit[1] = "";
                 }
-            } else {
-                wordToDictionary = splitByDot[0];
+                if (tempMilionSplit[1].length() <= 3) {
+                    wordToDictionary = wordToDictionary + tempMilionSplit[0] + "." + tempMilionSplit[1] + " M";
+                } else {
+                    wordToDictionary = wordToDictionary + tempMilionSplit[0] + "." + tempMilionSplit[1].substring(0, 3) + " M";
+                }
+
+            } else if (newNumberDouble >= 1000000000) {
+                newNumberDouble = newNumberDouble / 1000000000;
+                String tempMilion = newNumberDouble + "";
+                String[] tempMilionSplit = tempMilion.split("\\.");
+                if (tempMilionSplit.length == 0) {
+                    tempMilionSplit = new String[2];
+                    tempMilionSplit[0] = tempMilion;
+                    tempMilionSplit[1] = "";
+                }
+                if (tempMilionSplit[1].length() <= 3) {
+                    wordToDictionary = wordToDictionary + tempMilionSplit[0] + "." + tempMilionSplit[1] + " B";
+                } else {
+                    wordToDictionary = wordToDictionary + tempMilionSplit[0] + "." + tempMilionSplit[1].substring(0, 3) + " B";
+                }
+
+            } else {// its a number smaller than 1000
+                if (splitByDot.length > 1) {//there is something after the dot
+                    if (splitByDot[1].length() <= 3) {
+                        wordToDictionary = wordToDictionary + splitByDot[0] + "." + splitByDot[1];
+                    } else {
+                        wordToDictionary = wordToDictionary + splitByDot[0] + "." + splitByDot[1].substring(0, 3);
+                    }
+                } else {
+                    wordToDictionary = splitByDot[0];
+                }
+
+                if (word2.equals("Thousand") || word2.equals("thousand")) {
+                    wordToDictionary = wordToDictionary + " K";
+                    NotToCheckWord2 = true;
+                } else if (word2.equals("Million") || word2.equals("million") || word2.equals("m")) {
+                    wordToDictionary = wordToDictionary + " M";
+                    NotToCheckWord2 = true;
+
+                } else if (word2.equals("Billion") || word2.equals("billion") || word2.equals("bn")) {
+                    wordToDictionary = wordToDictionary + " B";
+                    NotToCheckWord2 = true;
+
+                }
+
+            }
+            if (checkIfFriction(word2)) {
+                wordToDictionary = wordToDictionary + " " + word2;
+                NotToCheckWord2 = true;
+            }
+            if (checkIfPercent(word2) || withPercent) {
+                wordToDictionary = wordToDictionary + "%";
             }
 
-            if (word2.equals("Thousand") || word2.equals("thousand")) {
-                wordToDictionary = wordToDictionary + " K";
-                NotToCheckWord2 = true;
-            } else if (word2.equals("Million") || word2.equals("million") || word2.equals("m")) {
-                wordToDictionary = wordToDictionary + " M";
-                NotToCheckWord2 = true;
-
-            } else if (word2.equals("Billion") || word2.equals("billion") || word2.equals("bn")) {
-                wordToDictionary = wordToDictionary + " B";
-                NotToCheckWord2 = true;
-
-            }
-
-        }
-        if (checkIfFriction(word2)) {
-            wordToDictionary = wordToDictionary + " " + word2;
-            NotToCheckWord2 = true;
-        }
-        if (checkIfPercent(word2) || withPercent) {
-            wordToDictionary = wordToDictionary + "%";
-        }
-
-        addToDictionary(wordToDictionary, docmap);
-        }
-        catch (NumberFormatException e){
-            addToDictionary(word1.toUpperCase(),docmap);
+            addToDictionary(wordToDictionary, docmap);
+        } catch (NumberFormatException e) {
+            addToDictionary(word1.toUpperCase(), docmap);
         }
 
     }
@@ -467,14 +460,10 @@ public class Parse {
             }
 
 
-
             addToDictionary(wordToDictionary, docmap);
 
 
-
-
-        }
-        catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             addToDictionary(word1.toUpperCase(), docmap);
 
         }
@@ -482,88 +471,84 @@ public class Parse {
 
 
     public void addUpperLowerLetter(String word1, HashMap<String, Integer> docmap) {
-        if(word1.equals("and")){
+        if (word1.equals("and")) {
             System.out.println("i'm and - and i am in upperLowerLetter");
         }
         if (!dictionary.containsKey(word1)) {
             if (word1.charAt(0) >= 'A' && word1.charAt(0) <= 'Z') {
 
-                String temp =word1.toLowerCase();
-                if(!dictionary.containsKey(temp)){
-                    addToDictionary(word1.toUpperCase(),docmap);
-                    if(word1.toUpperCase().equals("AND")){
+                String temp = word1.toLowerCase();
+                if (!dictionary.containsKey(temp)) {
+                    addToDictionary(word1.toUpperCase(), docmap);
+                    if (word1.toUpperCase().equals("AND")) {
                         System.out.println("i'm and - and i am in upperLowerLetter - changing to upper");
                     }
+                } else {
+                    addToDictionary(temp, docmap);
                 }
-                else{
-                    addToDictionary(temp,docmap);
-                }
-            }
-            else{
+            } else {
                 String tempToUpper = word1.toUpperCase();
                 String tempToLower = word1.toLowerCase();
 
-                if(dictionary.containsKey(tempToUpper)){
-                    termData toSave=dictionary.get(tempToUpper);
+                if (dictionary.containsKey(tempToUpper)) {
+                    termData toSave = dictionary.get(tempToUpper);
                     dictionary.remove(tempToUpper);
-                    dictionary.put(tempToLower,toSave);
+                    dictionary.put(tempToLower, toSave);
                     //change in the dictionary+local hashmap to the word with the small letter
-                    if(docmap.containsKey(tempToUpper)){
-                        int counter=docmap.get(tempToUpper);
+                    if (docmap.containsKey(tempToUpper)) {
+                        int counter = docmap.get(tempToUpper);
                         docmap.remove(tempToUpper);
-                        docmap.put(tempToLower,counter);
+                        docmap.put(tempToLower, counter);
 
                     }
-                    addToDictionary(tempToLower,docmap);
+                    addToDictionary(tempToLower, docmap);
 
 
+                } else {
+                    addToDictionary(tempToLower, docmap);
                 }
-                else{
-                    addToDictionary(tempToLower,docmap);                }
             }
-        }
-        else{
-            addToDictionary(word1,docmap);
-            if(word1.equals("and")){
+        } else {
+            addToDictionary(word1, docmap);
+            if (word1.equals("and")) {
                 System.out.println("i'm and - and i am in dictionary already");
             }
-            if(word1.equals("AND")){
+            if (word1.equals("AND")) {
                 System.out.println("i'm AND - and i am in dictionary already");
             }
         }
     }
 
-    public String checkDotPsikHyphenInTheEnd(String wordToCheck){
-       String wordToReturn = wordToCheck;
-       if(wordToCheck.length()!=0) {
-           if (wordToCheck.charAt(wordToCheck.length() - 1) == ',' || wordToCheck.charAt(wordToCheck.length() - 1) == '.' || wordToCheck.charAt(wordToCheck.length() - 1) == '-') {
-               wordToReturn = wordToCheck.substring(0, wordToCheck.length() - 1);
-           }
-       }
+    public String checkDotPsikHyphenInTheEnd(String wordToCheck) {
+        String wordToReturn = wordToCheck;
+        if (wordToCheck.length() != 0) {
+            if (wordToCheck.charAt(wordToCheck.length() - 1) == ',' || wordToCheck.charAt(wordToCheck.length() - 1) == '.' || wordToCheck.charAt(wordToCheck.length() - 1) == '-') {
+                wordToReturn = wordToCheck.substring(0, wordToCheck.length() - 1);
+            }
+        }
         return wordToReturn;
 
     }
 
-    public boolean checkTermWithBETWEENandAdd(String word1,String word2,String word3,String word4,HashMap<String,Integer> docmap){
+    public boolean checkTermWithBETWEENandAdd(String word1, String word2, String word3, String word4, HashMap<String, Integer> docmap) {
         boolean isItwithBetween = false;
-        if(word1.equals("between")){
-            if(word2.length()!=0 &&word2.charAt(0)>='0' && word2.charAt(0)<='9'){
-                if(word3.length()!=0 && word3.equals("and")){
-                    if(word4.length()!=0 &&word4.charAt(0)>='0' && word4.charAt(0)<='9'){
-                        String wordToDictionary = word1+ " "+ word2+" "+word3+" "+ word4;
-                        addToDictionary(wordToDictionary,docmap);
-                        isItwithBetween=true;
+        if (word1.equals("between")) {
+            if (word2.length() != 0 && word2.charAt(0) >= '0' && word2.charAt(0) <= '9') {
+                if (word3.length() != 0 && word3.equals("and")) {
+                    if (word4.length() != 0 && word4.charAt(0) >= '0' && word4.charAt(0) <= '9') {
+                        String wordToDictionary = word1 + " " + word2 + " " + word3 + " " + word4;
+                        addToDictionary(wordToDictionary, docmap);
+                        isItwithBetween = true;
                     }
                 }
             }
-        }
-        else{
-            isItwithBetween=false;
+        } else {
+            isItwithBetween = false;
         }
         return isItwithBetween;
     }
 
-    public String  removeUnccessaryChar(String word){
+    public String removeUnccessaryChar(String word) {
 
         while (word.length() >= 2 && (word.charAt(0) == '.' || word.charAt(0) == ',' || word.charAt(0) == '/' || word.charAt(0) == '%' || word.charAt(0) == '+' || word.charAt(0) == '|')) {
 
@@ -577,12 +562,12 @@ public class Parse {
 
     }
 
-    public void buildDictionary(HashMap<String, DocDetails> docDetailsHashMap, TreeMap<String,String> localDictionary, boolean toStem) throws IOException {
+    public void buildDictionary(HashMap<String, DocDetails> docDetailsHashMap, TreeMap<String, String> localDictionary, boolean toStem) throws IOException {
 
         for (Map.Entry<String, DocDetails> entery : docDetailsHashMap.entrySet()) {//parsing one doc each time
 
-            HashMap<String, Integer> suspectedLocalMapYeshut=new HashMap<>();
-            HashMap<String,Integer> docMap= new HashMap<>(); //hashmap for every doc
+            HashMap<String, Integer> suspectedLocalMapYeshut = new HashMap<>();
+            HashMap<String, Integer> docMap = new HashMap<>(); //hashmap for every doc
             String text = entery.getValue().getText();
             String[] splitedText = text.split(" |\\;|\\?|\\!|\\:|\\_|\\(|\\)|\"|\t|\\]|\\[|\"|\\*|\\#|\"|\\&|\\@|\\'");
             for (int i = 0; i < splitedText.length; i++) {
@@ -594,83 +579,75 @@ public class Parse {
 
                 if (i <= splitedText.length - 2) {//set the second word
                     word2 = checkDotPsikHyphenInTheEnd(splitedText[i + 1]);
-                    word2=removeUnccessaryChar(word2);
+                    word2 = removeUnccessaryChar(word2);
                 }
-                if(i<= splitedText.length -3 ){
-                    word3 = checkDotPsikHyphenInTheEnd(splitedText[i+2]);
-                    word3=removeUnccessaryChar(word3);
+                if (i <= splitedText.length - 3) {
+                    word3 = checkDotPsikHyphenInTheEnd(splitedText[i + 2]);
+                    word3 = removeUnccessaryChar(word3);
 
                 }
-                if(i<= splitedText.length -4 ){
-                    word4 =checkDotPsikHyphenInTheEnd(splitedText[i+3]);
-                    word4=removeUnccessaryChar(word4);
+                if (i <= splitedText.length - 4) {
+                    word4 = checkDotPsikHyphenInTheEnd(splitedText[i + 3]);
+                    word4 = removeUnccessaryChar(word4);
 
                 }
-                if(toStem){
+                if (toStem) {
                     stemmer.setCurrent(word1); //set string you need to stem
                     stemmer.stem();  //stem the word
-                    word1= stemmer.getCurrent();//get the stemmed word
+                    word1 = stemmer.getCurrent();//get the stemmed word
 
                     stemmer.setCurrent(word2); //set string you need to stem
                     stemmer.stem();  //stem the word
-                    word2= stemmer.getCurrent();//get the stemmed word
+                    word2 = stemmer.getCurrent();//get the stemmed word
 
                     stemmer.setCurrent(word3); //set string you need to stem
                     stemmer.stem();  //stem the word
-                    word3= stemmer.getCurrent();//get the stemmed word
+                    word3 = stemmer.getCurrent();//get the stemmed word
 
                     stemmer.setCurrent(word4); //set string you need to stem
                     stemmer.stem();  //stem the word
-                    word4= stemmer.getCurrent();//get the stemmed word
+                    word4 = stemmer.getCurrent();//get the stemmed word
                 }
 
 
+                word1 = checkDotPsikHyphenInTheEnd(word1);
+                word1 = removeUnccessaryChar(word1);
 
 
-                word1=checkDotPsikHyphenInTheEnd(word1);
-                word1=removeUnccessaryChar(word1);
-
-
-                if(stopWords.contains(word1)){
+                if (stopWords.contains(word1)) {
                     continue;
                 }
 
 
-
-
-
-                if(word1.equals(" ")|| word1.length()==0 || word1.equals("%")){
+                if (word1.equals(" ") || word1.length() == 0 || word1.equals("%")) {
                     continue;
                 }
 
 
-                int numOfSuspected =howMuchSuspectedWords(word1,word2,word3,word4);
-                if(numOfSuspected>1){
-                    if(numOfSuspected==2){
-                        word1=word1+" "+word2;
+                int numOfSuspected = howMuchSuspectedWords(word1, word2, word3, word4);
+                if (numOfSuspected > 1) {
+                    if (numOfSuspected == 2) {
+                        word1 = word1 + " " + word2;
                         i++;
-                    }
-                    else if(numOfSuspected==3){
-                        word1=word1+" "+word2+" "+word3;
-                        i=i+2;
-                    }
-                    else if(numOfSuspected==4){
-                        word1=word1+" "+word2+" "+word3+" "+word4;
-                        i=i+3;
+                    } else if (numOfSuspected == 3) {
+                        word1 = word1 + " " + word2 + " " + word3;
+                        i = i + 2;
+                    } else if (numOfSuspected == 4) {
+                        word1 = word1 + " " + word2 + " " + word3 + " " + word4;
+                        i = i + 3;
                     }
 
 
-                    String tempWord1= word1.toUpperCase();
-                  if(suspectedLocalMapYeshut.containsKey(tempWord1)){
-                           suspectedLocalMapYeshut.replace(tempWord1,suspectedLocalMapYeshut.get(tempWord1)+1);
-                    }
-                  else{
-                        suspectedLocalMapYeshut.put(tempWord1,1);
+                    String tempWord1 = word1.toUpperCase();
+                    if (suspectedLocalMapYeshut.containsKey(tempWord1)) {
+                        suspectedLocalMapYeshut.replace(tempWord1, suspectedLocalMapYeshut.get(tempWord1) + 1);
+                    } else {
+                        suspectedLocalMapYeshut.put(tempWord1, 1);
                     }
                     continue;
                 }
 
-                if(checkTermWithBETWEENandAdd(word1,word2,word3,word4,docMap)){//this function must be here because the word between is a stop word
+                if (checkTermWithBETWEENandAdd(word1, word2, word3, word4, docMap)) {//this function must be here because the word between is a stop word
                     i++;
                     i++;
                     i++;
@@ -678,25 +655,23 @@ public class Parse {
                 }
 
 
-
-
-                if((word1.charAt(0)>='0'&& word1.charAt(0)<='9')){//it's a number
-                    if(word1.contains("-")){
-                        word1=word1.toUpperCase();
-                        addToDictionary(word1,docMap);
+                if ((word1.charAt(0) >= '0' && word1.charAt(0) <= '9')) {//it's a number
+                    if (word1.contains("-")) {
+                        word1 = word1.toUpperCase();
+                        addToDictionary(word1, docMap);
                         continue;
                     }
 
                     //try{
-                        if(word1.charAt(word1.length()-1)=='f' ||word1.charAt(word1.length()-1)=='F'|| word1.charAt(word1.length()-1)=='d'|| word1.charAt(word1.length()-1)=='D'){
-                            word1=word1.toUpperCase();
-                            addToDictionary(word1,docMap);
+                    if (word1.charAt(word1.length() - 1) == 'f' || word1.charAt(word1.length() - 1) == 'F' || word1.charAt(word1.length() - 1) == 'd' || word1.charAt(word1.length() - 1) == 'D') {
+                        word1 = word1.toUpperCase();
+                        addToDictionary(word1, docMap);
 
-                            continue;
-                        }
-                       // Double.parseDouble(word1);
-                       //fixing a bug happens only in this case: we seperate the word but the original string wasn't update, so it's skeeps on word
-                        //because of NotToCheckWord3 parameter
+                        continue;
+                    }
+                    // Double.parseDouble(word1);
+                    //fixing a bug happens only in this case: we seperate the word but the original string wasn't update, so it's skeeps on word
+                    //because of NotToCheckWord3 parameter
                     //}
 //                    catch (NumberFormatException e){
 //                        word1=word1.toUpperCase();
@@ -707,66 +682,56 @@ public class Parse {
 //                    }
 
 
-
-                   if((word2.length()!=0&&(word2.equals("Dollars")||word2.equals("dollars"))) || (word3.length()!=0&&(word3.equals("Dollars")||word3.equals("dollars")))) {
-                        addPrice(word1,word2,word3,word4,docMap);
-                    }
-                    else if(((word3.length()!=0 &&word4.length()!=0) &&((word4.equals("Dollars")||word4.equals("dollars"))&&word3.equals("U.S")))){
-                        addPrice(word1,word2,word3,word4,docMap);
-                    }
-                    else if(monthList.containsKey(word2)){
-                        addMonthNumbersFirst(word1,word2,docMap);
-                    }
-                    else {
-                        boolean toContinue=false;
-                        for(int j=0; j<word1.length() && !toContinue; j++){
-                            if(((word1.charAt(j)>='a') && (word1.charAt(j)<='z'))||((word1.charAt(j)>='A') && (word1.charAt(j)<='Z'))){
-                                addToDictionary(word1.toUpperCase(),docMap);
-                                toContinue=true;
+                    if ((word2.length() != 0 && (word2.equals("Dollars") || word2.equals("dollars"))) || (word3.length() != 0 && (word3.equals("Dollars") || word3.equals("dollars")))) {
+                        addPrice(word1, word2, word3, word4, docMap);
+                    } else if (((word3.length() != 0 && word4.length() != 0) && ((word4.equals("Dollars") || word4.equals("dollars")) && word3.equals("U.S")))) {
+                        addPrice(word1, word2, word3, word4, docMap);
+                    } else if (monthList.containsKey(word2)) {
+                        addMonthNumbersFirst(word1, word2, docMap);
+                    } else {
+                        boolean toContinue = false;
+                        for (int j = 0; j < word1.length() && !toContinue; j++) {
+                            if (((word1.charAt(j) >= 'a') && (word1.charAt(j) <= 'z')) || ((word1.charAt(j) >= 'A') && (word1.charAt(j) <= 'Z'))) {
+                                addToDictionary(word1.toUpperCase(), docMap);
+                                toContinue = true;
 
                             }
                         }
-                        if(toContinue==false){
-                            addNumberToDictionary(word1,word2,docMap);
+                        if (toContinue == false) {
+                            addNumberToDictionary(word1, word2, docMap);
 
                         }
-                   }
-                }
-                else if(word1.charAt(0)=='$'){                         // another if to check if first char is $
-                    addPrice(word1,word2,word3,word4,docMap);
-                }
-                else if(word1.charAt(0)=='-'){//in case that the word is --
+                    }
+                } else if (word1.charAt(0) == '$') {                         // another if to check if first char is $
+                    addPrice(word1, word2, word3, word4, docMap);
+                } else if (word1.charAt(0) == '-') {//in case that the word is --
                     continue;
-                }
-                else{
-                    if(monthList.containsKey(word1)&& word2.length()!=0 && word2.charAt(0)<='9'&& word2.charAt(0)>='0'){
-                        addMonth_MonthFirst(word1,word2,docMap);
-                    }
-                    else{
-                        addUpperLowerLetter(word1,docMap);
+                } else {
+                    if (monthList.containsKey(word1) && word2.length() != 0 && word2.charAt(0) <= '9' && word2.charAt(0) >= '0') {
+                        addMonth_MonthFirst(word1, word2, docMap);
+                    } else {
+                        addUpperLowerLetter(word1, docMap);
                     }
 
                 }
-                if(NotToCheckWord2){
-                    NotToCheckWord2=false;
+                if (NotToCheckWord2) {
+                    NotToCheckWord2 = false;
                     i++;
                 }
-                if(NotToCheckWord3){
-                    NotToCheckWord3=false;
-                    i++;
-                    i++;
-                }
-                if(NotToCheckWord4){
-                    NotToCheckWord4=false;
-                    i++;
+                if (NotToCheckWord3) {
+                    NotToCheckWord3 = false;
                     i++;
                     i++;
                 }
-
+                if (NotToCheckWord4) {
+                    NotToCheckWord4 = false;
+                    i++;
+                    i++;
+                    i++;
+                }
 
 
             }//finish parser doc words
-
 
 
             //add docs info
@@ -774,53 +739,52 @@ public class Parse {
 
              */
             //copy docmap to local dictionary
-            int max_tf=0;
-            for(Map.Entry<String, Integer> term : docMap.entrySet()){
-                if(term.getValue()>max_tf){
-                    max_tf=term.getValue();
+            int max_tf = 0;
+            for (Map.Entry<String, Integer> term : docMap.entrySet()) {
+                if (term.getValue() > max_tf) {
+                    max_tf = term.getValue();
                 }
-                if(localDictionary.containsKey(term.getKey())){
-                    String newDetails=localDictionary.get(term.getKey());//details of docs that we already saved
-                    String detailsToAdd=entery.getValue().getDocono()+ " "+ term.getValue();//details we want to add
-                    newDetails=newDetails+" "+detailsToAdd;//new string with all details that we want to replace with the previous
-                    localDictionary.replace(term.getKey(),newDetails);
-                }
-                else{
-                    String details=entery.getValue().getDocono()+ " "+ term.getValue();
-                    localDictionary.put(term.getKey(),details);
+                if (localDictionary.containsKey(term.getKey())) {
+                    String newDetails = localDictionary.get(term.getKey());//details of docs that we already saved
+                    String detailsToAdd = entery.getValue().getDocono() + " " + term.getValue();//details we want to add
+                    newDetails = newDetails + " " + detailsToAdd;//new string with all details that we want to replace with the previous
+                    localDictionary.replace(term.getKey(), newDetails);
+                } else {
+                    String details = entery.getValue().getDocono() + " " + term.getValue();
+                    localDictionary.put(term.getKey(), details);
                 }
             }
-            int unique=docMap.size();
+            int unique = docMap.size();
 //////////i added this info to docInfo after i counted yeshut number in the doc
 
-            int yeshutNumberInDoc=0;
+            int yeshutNumberInDoc = 0;
             //////GOING THROGH SUSPECTED YESHUYOT
             Iterator hmIterator = suspectedLocalMapYeshut.entrySet().iterator();
-            while(hmIterator.hasNext()){
-                Map.Entry suspectedYeshut = (Map.Entry)hmIterator.next();
-                String stringSuspectedYeshut=(String)suspectedYeshut.getKey();
-                String stringSuspectedYeshutUpper = ((String)suspectedYeshut.getKey()).toUpperCase();
+            while (hmIterator.hasNext()) {
+                Map.Entry suspectedYeshut = (Map.Entry) hmIterator.next();
+                String stringSuspectedYeshut = (String) suspectedYeshut.getKey();
+                String stringSuspectedYeshutUpper = ((String) suspectedYeshut.getKey()).toUpperCase();
 
-                int intSuspectedYeshut = (int)suspectedYeshut.getValue();
+                int intSuspectedYeshut = (int) suspectedYeshut.getValue();
                 if (dictionary.containsKey(stringSuspectedYeshutUpper)) {
                     yeshutNumberInDoc++;
-                    termData temp=dictionary.get(stringSuspectedYeshutUpper);
-                    int numOfdoc=temp.getNumOfDoc();
-                    int totAppear=temp.getTotalApearance();
-                    dictionary.get(stringSuspectedYeshutUpper).setNumOfDoc(numOfdoc+1);
-                    dictionary.get(stringSuspectedYeshutUpper).setTotalApearance(totAppear+intSuspectedYeshut);//change dictionary
-                    if(localDictionary.containsKey(stringSuspectedYeshutUpper)){
-                        String newDetails=localDictionary.get(stringSuspectedYeshutUpper);//details of docs that we already saved
-                        String moredetailsToAdd=entery.getKey()+ " "+ intSuspectedYeshut;//details we want to add
-                        newDetails=newDetails+" "+moredetailsToAdd;//new string with all details that we want to replace with the previous
+                    termData temp = dictionary.get(stringSuspectedYeshutUpper);
+                    int numOfdoc = temp.getNumOfDoc();
+                    int totAppear = temp.getTotalApearance();
+                    dictionary.get(stringSuspectedYeshutUpper).setNumOfDoc(numOfdoc + 1);
+                    dictionary.get(stringSuspectedYeshutUpper).setTotalApearance(totAppear + intSuspectedYeshut);//change dictionary
+                    if (localDictionary.containsKey(stringSuspectedYeshutUpper)) {
+                        String newDetails = localDictionary.get(stringSuspectedYeshutUpper);//details of docs that we already saved
+                        String moredetailsToAdd = entery.getKey() + " " + intSuspectedYeshut;//details we want to add
+                        newDetails = newDetails + " " + moredetailsToAdd;//new string with all details that we want to replace with the previous
                         localDictionary.remove(stringSuspectedYeshutUpper);
-                        localDictionary.put(stringSuspectedYeshutUpper,newDetails);
-                        bufferedWriter.write(stringSuspectedYeshut+"@"+newDetails);
+                        localDictionary.put(stringSuspectedYeshutUpper, newDetails);
+                        bufferedWriter.write(stringSuspectedYeshut + "@" + newDetails);
                         bufferedWriter.newLine();
                     }
 
 
-                   hmIterator.remove();
+                    hmIterator.remove();
                 } else if (YeshutGlobalMap.containsKey(stringSuspectedYeshutUpper)) {
                     yeshutNumberInDoc++;
                     YeshutAddToDictionary(YeshutGlobalMap, suspectedLocalMapYeshut, localDictionary, entery.getKey(), stringSuspectedYeshut);
@@ -829,15 +793,15 @@ public class Parse {
 
             }
 
-            DocDetails detailsToAdd = new DocDetails(max_tf, unique,splitedText.length, yeshutNumberInDoc);
-            DocInfo.put(entery.getKey(),detailsToAdd);
+            DocDetails detailsToAdd = new DocDetails(max_tf, unique, splitedText.length, yeshutNumberInDoc);
+            DocInfo.put(entery.getKey(), detailsToAdd);
 
             ///////////////////////////////
             //////COPY SUSPECTED YESHUYOT TO GLOBAL MAP
-            for(Map.Entry<String, Integer> suspectedYeshut : suspectedLocalMapYeshut.entrySet()){
-                if(!dictionary.containsKey(suspectedYeshut.getKey())){
-                    Pair pairToAdd=new Pair(entery.getKey(),suspectedLocalMapYeshut.get(suspectedYeshut.getKey()));
-                    YeshutGlobalMap.put(suspectedYeshut.getKey().toUpperCase(),pairToAdd);
+            for (Map.Entry<String, Integer> suspectedYeshut : suspectedLocalMapYeshut.entrySet()) {
+                if (!dictionary.containsKey(suspectedYeshut.getKey())) {
+                    Pair pairToAdd = new Pair(entery.getKey(), suspectedLocalMapYeshut.get(suspectedYeshut.getKey()));
+                    YeshutGlobalMap.put(suspectedYeshut.getKey().toUpperCase(), pairToAdd);
                 }
             }
             /////////////////////////////
@@ -845,14 +809,14 @@ public class Parse {
 
     }
 
-    public void YeshutAddToDictionary(HashMap<String, Pair<String,Integer>> termGlobalMap, HashMap<String,Integer> termLocalMap,TreeMap<String,String> localDictionary,String DocName,String termName) throws IOException {
+    public void YeshutAddToDictionary(HashMap<String, Pair<String, Integer>> termGlobalMap, HashMap<String, Integer> termLocalMap, TreeMap<String, String> localDictionary, String DocName, String termName) throws IOException {
         String termNameUpper = termName.toUpperCase();
-        String newDetails = termGlobalMap.get(termNameUpper).getKey()+" "+ termGlobalMap.get(termNameUpper).getValue()+ " "+ DocName+ " "+ termLocalMap.get(termName);
-        bufferedWriter.write(termNameUpper+"@"+newDetails);
+        String newDetails = termGlobalMap.get(termNameUpper).getKey() + " " + termGlobalMap.get(termNameUpper).getValue() + " " + DocName + " " + termLocalMap.get(termName);
+        bufferedWriter.write(termNameUpper + "@" + newDetails);
         bufferedWriter.newLine();
-        int setTotalAppear=termGlobalMap.get(termNameUpper).getValue()+termLocalMap.get(termName);//take counter of global and local
-        dictionary.put(termNameUpper,new termData(2,1,termNameUpper,setTotalAppear));
-        localDictionary.put(termNameUpper,newDetails);
+        int setTotalAppear = termGlobalMap.get(termNameUpper).getValue() + termLocalMap.get(termName);//take counter of global and local
+        dictionary.put(termNameUpper, new termData(2, 1, termNameUpper, setTotalAppear));
+        localDictionary.put(termNameUpper, newDetails);
         termGlobalMap.remove(termName);
     }
 
@@ -860,16 +824,16 @@ public class Parse {
         return YeshutGlobalMap;
     }
 
-    public int howMuchSuspectedWords(String word1, String word2, String word3, String word4){
+    public int howMuchSuspectedWords(String word1, String word2, String word3, String word4) {
         int numOfSuspected = 0;
-        if(word1.charAt(0)>='A'&& word1.charAt(0)<='Z'){
-            numOfSuspected=1;
-            if(word2.length()!=0 && word2.charAt(0)>='A'&& word2.charAt(0)<='Z'){
-                numOfSuspected=2;
-                if(word3.length()!=0 && word3.charAt(0)>='A'&& word3.charAt(0)<='Z'){
-                    numOfSuspected=3;
-                    if(word4.length()!=0 && word4.charAt(0)>='A'&& word4.charAt(0)<='Z'){
-                        numOfSuspected=4;
+        if (word1.charAt(0) >= 'A' && word1.charAt(0) <= 'Z') {
+            numOfSuspected = 1;
+            if (word2.length() != 0 && word2.charAt(0) >= 'A' && word2.charAt(0) <= 'Z') {
+                numOfSuspected = 2;
+                if (word3.length() != 0 && word3.charAt(0) >= 'A' && word3.charAt(0) <= 'Z') {
+                    numOfSuspected = 3;
+                    if (word4.length() != 0 && word4.charAt(0) >= 'A' && word4.charAt(0) <= 'Z') {
+                        numOfSuspected = 4;
 
                     }
                 }

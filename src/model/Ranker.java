@@ -14,6 +14,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.medallia.word2vec.Searcher;
+import com.medallia.word2vec.Word2VecModel;
 import javafx.util.Pair;
 import org.tartarus.snowball.ext.PorterStemmer;
 
@@ -41,7 +43,7 @@ public class Ranker {
     }
 
 
-    public HashMap<String,Map<String, Double>> collectLinesQuery(String nameQuery, String initialQuery, Indexer index,String pathToWrite,HashMap<String,Map<String,Double>> relevantDoc, double docAvg, boolean toStem) throws Exception {
+    public HashMap<String,Map<String, Double>> collectLinesQuery(String nameQuery, String initialQuery, Indexer index,String pathToWrite,HashMap<String,Map<String,Double>> relevantDoc, double docAvg, boolean toStem, boolean onLine) throws Exception {
         if(toStem){
             String fixedInitialQuery="";
             String [] s = initialQuery.split(" ");
@@ -52,10 +54,10 @@ public class Ranker {
                 fixedInitialQuery=fixedInitialQuery+stemmer.getCurrent()+" ";//get the stemmed word
 
             }
-            query=semantic(fixedInitialQuery);
+            query=semantic(fixedInitialQuery,onLine,toStem);
         }
         else{
-            query=semantic(initialQuery);
+            query=semantic(initialQuery,onLine,toStem);
         }
         //query=semantic(initialQuery);
         String[] splitedQuery=query.split(" ");
@@ -122,7 +124,7 @@ public class Ranker {
             String docName=docAppear[i];
             int numOfAppear=Integer.parseInt(docAppear[i+1]);
             //compute tf
-           // double tf=(double) numOfAppear/(DocInfo.get(docName).getMax_tf());
+          //  double tf=(double) numOfAppear/(DocInfo.get(docName).getMax_tf());
             //try 2 more options
             double tf=(double) numOfAppear;
 
@@ -133,9 +135,17 @@ public class Ranker {
             //try one more option from class
 
             //compute score for qi
+//            if(!DocInfo.containsKey(docName)){
+//                System.out.println("i don't have docName:"+docName);
+//            }
             double partBScore= (tf*(1.3+1))/((1-0.75+0.75*(DocInfo.get(docName).getDocSize()/avg))+tf);
 
+//            if(!weights.containsKey(st[0])){
+//                System.out.println("i don't have word "+st[0]+" in weights hashMap");
+//                System.out.println("i'm in doc:"+docName);
+//            }
             double score=(weights.get(st[0].toLowerCase()))*idf*partBScore;
+
             if(relevantDoc.containsKey(nameQuery)){
                if(relevantDoc.get(nameQuery).containsKey(docName)){
                   double scoreToAdd= relevantDoc.get(nameQuery).get(docName)+score;
@@ -158,14 +168,36 @@ public class Ranker {
 
 
     }
-    public String semantic(String query) throws Exception {
+    public String semantic(String query,boolean onLine,boolean toStem) throws Exception {
         String newQuery = "";
         String [] splitedQuery = query.split(" ");
         for(String word:splitedQuery){
-            weights.put(word.toLowerCase(),(double)1);
+            if(toStem){
+                String d= word;
+                stemmer.setCurrent(d); //set string you need to stem
+                stemmer.stem();  //stem the word
+                d= stemmer.getCurrent();//get the stemmed word
+                weights.put(d.toLowerCase(), (double)1);
+            }
+            else{
+                weights.put(word.toLowerCase(),(double)1);
+            }
             newQuery=newQuery+" "+word;
             if(toUseSemantic){
-                newQuery=newQuery+" "+ searchSynonym(word);
+                String temp=word;
+                if(toStem){
+                    String d= word;
+                    stemmer.setCurrent(d); //set string you need to stem
+                    stemmer.stem();  //stem the word
+                    temp= stemmer.getCurrent();//get the stemmed word
+                }
+                if(onLine){
+                    newQuery=newQuery+" "+ searchSynonym(temp);
+                }
+                else{
+                    newQuery=newQuery+" "+searchSynonimOffLine(temp);
+                }
+
             }
         }
         System.out.println("i finished with semantic part");
@@ -174,7 +206,40 @@ public class Ranker {
         return newQuery;
     }
 
+    public String searchSynonimOffLine(String wordToSearch){
+        Word2VecModel Model = null;
+        String listOfSynonym="";
 
+        try {
+            Model = Word2VecModel.fromTextFile(new File("C:\\Users\\iris dreizenshtok\\Desktop\\programming\\searchEnignePartb_v1"+"\\word2vec.c.output.model.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        com.medallia.word2vec.Searcher semabticSearcher = Model.forSearch();
+        int numOfResultsinList = 3;
+        List<Searcher.Match> matches = null;
+        try {
+            matches = semabticSearcher.getMatches(wordToSearch,numOfResultsinList);
+        } catch (Searcher.UnknownWordException e) {
+            return listOfSynonym;
+        }
+        System.out.println("synonym words of:"+wordToSearch);
+        for(com.medallia.word2vec.Searcher.Match match: matches){
+            String s= match.match();
+
+            if(!wordToSearch.equals(s)){
+                listOfSynonym=listOfSynonym+s+" ";
+                weights.put(s,0.5);
+                System.out.println("i added to weights the word:"+s);
+            }
+        }
+
+
+
+
+
+        return listOfSynonym;
+    }
     public String searchSynonym(String wordToSearch) throws Exception {
         String listOfSynonym="";
         String url = "https://api.datamuse.com/words?rel_syn=" + wordToSearch;

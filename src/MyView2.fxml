@@ -54,17 +54,29 @@
                        <Button fx:id="btn_showDictionary" mnemonicParsing="false" onAction="#showDictionary" prefHeight="31.0" prefWidth="295.0" text="show dictionary" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                        <Button fx:id="btn_loadDictionary" mnemonicParsing="false" onAction="#loadDictionary" prefHeight="31.0" prefWidth="295.0" text="load dictionary" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 
-                       <Label text="query part:" GridPane.rowIndex="8" />
+                       <Label text="query part(with internet):" GridPane.rowIndex="8" />
                        <TextField fx:id="txtfld_singleQuery" prefHeight="31.0" prefWidth="50.0"  GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                       <Button fx:id="findQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="search" GridPane.columnIndex="2" GridPane.rowIndex="8" onAction="#callSearchOneQuery" />
+                       <Button fx:id="findQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="search with internet" GridPane.columnIndex="2" GridPane.rowIndex="8" onAction="#callSearchOneQuery_onLine" />
 
 
                        <Label text="browse query path:" GridPane.rowIndex="9"/>
                        <TextField fx:id="txtfld_pathForQuery" prefHeight="31.0" prefWidth="50.0"  GridPane.columnIndex="1" GridPane.rowIndex="9" />
                        <Button fx:id="browse_pathRorQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="browse path of queries" GridPane.columnIndex="2" GridPane.rowIndex="9" onAction="#loadQueryPath"/>
-                       <Button fx:id="search_pathRorQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="search from the file" GridPane.columnIndex="2" GridPane.rowIndex="10" onAction="#callSearchManyQuery" />
+                       <Button fx:id="search_pathRorQuery" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="search from the file with Internt" GridPane.columnIndex="2" GridPane.rowIndex="10" onAction="#callSearchManyQuery_onLine" />
                        <CheckBox fx:id="check_semantic"  text="to use semantic?" GridPane.columnIndex="2"  GridPane.rowIndex="11"/>
-                       <Button fx:id="enteties" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="show me enteties" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+
+
+                       <Label text="query part(without internet):" GridPane.rowIndex="13" />
+                       <TextField fx:id="txtfld_singleQuery_offline" prefHeight="31.0" prefWidth="50.0"  GridPane.columnIndex="1" GridPane.rowIndex="13" />
+                       <Button fx:id="findQuery_offLine" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="search without internet" GridPane.columnIndex="2" GridPane.rowIndex="13" onAction="#callSearchOneQuery_offLine" />
+
+
+                       <Label text="browse query path:" GridPane.rowIndex="14"/>
+                       <TextField fx:id="txtfld_pathForQuery_offLine" prefHeight="31.0" prefWidth="50.0"  GridPane.columnIndex="1" GridPane.rowIndex="14" />
+                       <Button fx:id="browse_pathRorQuery_offLine" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="browse path of queries" GridPane.columnIndex="2" GridPane.rowIndex="14" onAction="#loadQueryPath"/>
+                       <Button fx:id="search_pathRorQuery_offLine" mnemonicParsing="false"  prefHeight="31.0" prefWidth="295.0" text="search from the file without Internt" GridPane.columnIndex="2" GridPane.rowIndex="15" onAction="#callSearchManyQuery_offLine" />
+
+
 
                    </children>
                </GridPane>

@@ -13,10 +13,10 @@ public class Searcher {
         r=new Ranker(toUseSemantic);
     }
 
-    public HashMap<String,Map<String,Double>>   RankDocs(String nameQuery, String query, Indexer index, String pathToWrite, HashMap<String, Map<String,Double>> relevantDoc, double docAvg, boolean toStem) throws Exception {
+    public HashMap<String,Map<String,Double>>   RankDocs(String nameQuery, String query, Indexer index, String pathToWrite, HashMap<String, Map<String,Double>> relevantDoc, double docAvg, boolean toStem, boolean onLine) throws Exception {
         //to add parsing option
 
-        return  r.collectLinesQuery(nameQuery, query, index, pathToWrite, relevantDoc, docAvg,toStem);
+        return  r.collectLinesQuery(nameQuery, query, index, pathToWrite, relevantDoc, docAvg,toStem,onLine);
 
 
     }

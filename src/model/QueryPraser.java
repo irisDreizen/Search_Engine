@@ -545,6 +545,10 @@ public class QueryPraser {
 
     }
 
+    public void setToStem(boolean toStem) {
+        this.toStem = toStem;
+    }
+
     public void buildDictionary(String query) {
             HashMap<String, Integer> suspectedLocalMapYeshut=new HashMap<>();
             HashMap<String,Integer> docMap= new HashMap<>(); //hashmap for every doc

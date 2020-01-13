@@ -57,19 +57,19 @@ public class myModel extends Observable implements IModel {
     }
 
 
-    public void callSearchOneQuery(String nameQuery, String notParsedquery) throws Exception {
+    public void callSearchOneQuery(String nameQuery, String notParsedquery, boolean onLine) throws Exception {
         String query = parseQuery(pathToWrite,notParsedquery);
-        searche.RankDocs(nameQuery,query,index,pathToWrite,relevantDoc,getDocAvg(), toStem);//this should be changed, the input is the parsed query
+        searche.RankDocs(nameQuery,query,index,pathToWrite,relevantDoc,getDocAvg(), toStem, onLine);//this should be changed, the input is the parsed query
     }
 
-    public void callSearchManyQuery(String pathOfQueries) throws Exception {
+    public void callSearchManyQuery(String pathOfQueries, boolean onLine) throws Exception {
         HashMap<String,Map<String,Double>>fix=new HashMap<>();
         HashMap<String, Query> queries = TagsAndParseQuery_AndRank(pathOfQueries);
         for (Map.Entry<String, Query> entry : queries.entrySet()) {
             String idQ = entry.getKey();//id
             String desc = entry.getValue().getDescription();
             String q = entry.getValue().getTitle() + " " + desc;
-            callSearchOneQuery(idQ, q);
+            callSearchOneQuery(idQ, q, onLine);
         }
 
         for (Map.Entry<String, Map<String, Double>> entry : relevantDoc.entrySet()) {
@@ -192,6 +192,7 @@ public class myModel extends Observable implements IModel {
 
 public String parseQuery(String pathToWrite, String query) throws IOException {
         QueryPraser queryPraser = new QueryPraser(pathToWrite+"\\stop_words.txt");
+        queryPraser.setToStem(toStem);
         queryPraser.buildDictionary(query);
         HashMap<String, termData> newQuery =  queryPraser.getDictionary();
         String parsedQuery = "";
