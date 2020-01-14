@@ -69,7 +69,17 @@ public class myModel extends Observable implements IModel {
             String idQ = entry.getKey();//id
             String desc = entry.getValue().getDescription();
             String q = entry.getValue().getTitle() + " " + desc;
+            //////
+            long startTime = System.nanoTime();
+
             callSearchOneQuery(idQ, q, onLine);
+            long endTime   = System.nanoTime();
+            long totalTime = endTime - startTime;
+            double totalTimeSecond=(totalTime)*(1.0E-9);
+            System.out.println("time in seconds:"+totalTimeSecond);
+
+
+            ////////////
         }
 
         for (Map.Entry<String, Map<String, Double>> entry : relevantDoc.entrySet()) {
@@ -116,7 +126,7 @@ public class myModel extends Observable implements IModel {
     }
 
     public void writeQueryToDisk() throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(pathForQueries+"\\"+"results.txt"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(pathForQueries+"\\"+"resultsSteam.txt"));
         LinkedHashMap<String, Map<String, Double>> sortedDictionary = new LinkedHashMap<>();
         relevantDoc.entrySet().stream().sorted(new Comparator<Map.Entry<String, Map<String, Double>>>() {
             @Override
