@@ -57,7 +57,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../לימודים/שנה ג/אחזור/מנוע חלק ב/jars/jackson-databind-2.9.4.jar!/" />
+          <root url="jar://$USER_HOME$/לימודים/שנה ג/אחזור/מנוע חלק ב/jars/jackson-databind-2.9.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -66,7 +66,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../לימודים/שנה ג/אחזור/מנוע חלק ב/jars/jackson-annotations-2.9.4.jar!/" />
+          <root url="jar://$USER_HOME$/לימודים/שנה ג/אחזור/מנוע חלק ב/jars/jackson-annotations-2.9.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -75,7 +75,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../לימודים/שנה ג/אחזור/מנוע חלק ב/jars/jackson-core-2.9.4.jar!/" />
+          <root url="jar://$USER_HOME$/לימודים/שנה ג/אחזור/מנוע חלק ב/jars/jackson-core-2.9.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -85,7 +85,52 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../לימודים/שנה ג/אחזור/מנוע חלק ב/jars/medallia-word2vec-0.10.2-jar-with-dependencies.jar!/" />
+          <root url="jar://$USER_HOME$/לימודים/שנה ג/אחזור/מנוע חלק ב/jars/medallia-word2vec-0.10.2-jar-with-dependencies.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Downloads/w2vJAR.zip!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Desktop/SIMESTER_H/IT/w2vJAR/medallia-word2vec-0.10.2-jar-with-dependencies.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Desktop/SIMESTER_H/IT/jackson-annotations-2.9.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Desktop/SIMESTER_H/IT/jackson-core-2.9.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Desktop/SIMESTER_H/IT/jackson-databind-2.9.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
