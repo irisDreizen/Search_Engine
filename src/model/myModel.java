@@ -148,7 +148,7 @@ public class myModel extends Observable implements IModel {
     public HashMap<String, Query> TagsAndParseQuery_AndRank(String pathOfQueries) throws IOException {
         HashMap<String, Query> queries = new HashMap<>();
         try {
-            Document query = Jsoup.parse(new File(pathOfQueries+"\\quries.txt"), "UTF-8");
+            Document query = Jsoup.parse(new File(pathOfQueries+"\\queries.txt"), "UTF-8");
             Elements allQueries = query.getElementsByTag("top");
             for (Element currQ : allQueries) {
                 //insert ID

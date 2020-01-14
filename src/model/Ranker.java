@@ -281,7 +281,7 @@ public class Ranker {
             if(words.size() > 0) {
                 for(Word word : words) {
                     if(word.getScore()>5000){
-                        Double weight = 0.5;
+                        Double weight = 0.4;
                         if (toStem) {
                             String d= word.getWord();
                             stemmer.setCurrent(d); //set string you need to stem
@@ -301,7 +301,7 @@ public class Ranker {
 
                     }
                     else if(word.getScore()>1000){
-                        Double weight = 0.2;
+                        Double weight = 0.1;
                         if (toStem) {
                             String d= word.getWord();
                             stemmer.setCurrent(d); //set string you need to stem
