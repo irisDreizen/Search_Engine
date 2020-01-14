@@ -124,7 +124,7 @@ public class myController implements Observer {
             long endTime = System.nanoTime();
             long totalTime = endTime - startTime;
             double totalTimeSecond = (totalTime) * (1.0E-9);
-            System.out.println("time in seconds:" + totalTimeSecond);
+      //      System.out.println("time in seconds:" + totalTimeSecond);
             this.myViewModel.writeQueryToDisk();
             showQueries();
         }
@@ -144,7 +144,7 @@ public class myController implements Observer {
             long endTime   = System.nanoTime();
             long totalTime = endTime - startTime;
             double totalTimeSecond=(totalTime)*(1.0E-9);
-            System.out.println("time in seconds:"+totalTimeSecond);
+         //   System.out.println("time in seconds:"+totalTimeSecond);
             this.myViewModel.writeQueryToDisk();
             showQueries();
         }
