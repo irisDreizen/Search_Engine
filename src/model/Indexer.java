@@ -30,7 +30,13 @@ public class Indexer {
     public Indexer(String pathToRead, String pathToWrite,Boolean toStemUpdate) throws IOException {
         stemmer = new PorterStemmer();
         String newPathOfStopWords = pathToRead+"\\stop_words.txt";
-        this.bufferedWriter=new BufferedWriter(new FileWriter(pathToWrite+"\\enteties.txt"));
+        if(toStemUpdate){
+            this.bufferedWriter=new BufferedWriter(new FileWriter(pathToWrite+"\\enteties_stem.txt"));
+        }
+        else{
+            this.bufferedWriter=new BufferedWriter(new FileWriter(pathToWrite+"\\enteties_noStem.txt"));
+        }
+
         this.p = new Parse(newPathOfStopWords, bufferedWriter) ;
         this.r = new ReadFile(pathToRead+"\\corpus");
         this.pathToWrite=pathToWrite;

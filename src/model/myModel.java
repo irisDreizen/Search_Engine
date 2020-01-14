@@ -276,7 +276,13 @@ public String parseQuery(String pathToWrite, String query) throws IOException {
 
     public void loadEnteties() throws IOException {
         File f;
-        f=new File(pathToWrite+"\\" + "enteties" + ".txt");
+        if(toStem){
+            f=new File(pathToWrite+"\\" + "enteties_stem" + ".txt");
+        }
+        else{
+            f=new File(pathToWrite+"\\" + "enteties_noStem" + ".txt");
+        }
+
         if(!f.exists()){
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"this is a wrong path");
             Optional<ButtonType> result = alert.showAndWait();
