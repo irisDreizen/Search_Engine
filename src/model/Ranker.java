@@ -140,10 +140,10 @@ public class Ranker {
 //            }
             double partBScore= (tf*(1.3+1))/((1-0.75+0.75*(DocInfo.get(docName).getDocSize()/avg))+tf);
 
-            if(!weights.containsKey(st[0].toLowerCase())){
-                System.out.println("i don't have word "+st[0]+" in weights hashMap");
-                System.out.println("i'm in doc:"+docName);
-            }
+//            if(!weights.containsKey(st[0].toLowerCase())){
+//                System.out.println("i don't have word "+st[0]+" in weights hashMap");
+//                System.out.println("i'm in doc:"+docName);
+//            }
             double score=(weights.get(st[0].toLowerCase()))*idf*partBScore;
 
             if(relevantDoc.containsKey(nameQuery)){
@@ -200,9 +200,9 @@ public class Ranker {
 
             }
         }
-        System.out.println("i finished with semantic part");
-        System.out.println("my old query is:"+query);
-        System.out.println("my new query is:"+newQuery);
+//        System.out.println("i finished with semantic part");
+//        System.out.println("my old query is:"+query);
+//        System.out.println("my new query is:"+newQuery);
         return newQuery;
     }
 
@@ -223,7 +223,7 @@ public class Ranker {
         } catch (Searcher.UnknownWordException e) {
             return listOfSynonym;
         }
-        System.out.println("synonym words of:"+wordToSearch);
+     //   System.out.println("synonym words of:"+wordToSearch);
         for(com.medallia.word2vec.Searcher.Match match: matches){
             String s= match.match();
 
@@ -236,7 +236,7 @@ public class Ranker {
                 listOfSynonym=listOfSynonym+s+" ";
                 if(!s.contains(" ")){
                     weights.put(s,0.5);
-                    System.out.println("i added to weights the word:"+s);
+                   // System.out.println("i added to weights the word:"+s);
                 }
             }
         }
@@ -277,7 +277,7 @@ public class Ranker {
                     mapper.getTypeFactory().constructCollectionType(ArrayList.class, Word.class)
             );
 
-           System.out.println("Synonym word of '" + wordToSearch + "':");
+     //      System.out.println("Synonym word of '" + wordToSearch + "':");
             if(words.size() > 0) {
                 for(Word word : words) {
                     if(word.getScore()>5000){
@@ -310,7 +310,7 @@ public class Ranker {
                             if(!d.contains(" ")){
                                 weights.put(d,weight);
                                 listOfSynonym=listOfSynonym+" "+d;
-                                System.out.println("stemmer - add word:"+d);
+                               // System.out.println("stemmer - add word:"+d);
                             }
                         }
                         else{
@@ -328,7 +328,7 @@ public class Ranker {
                 }
             }
             else {
-                System.out.println("none synonym word!");
+               // System.out.println("none synonym word!");
             }
         }
         catch (IOException e) {

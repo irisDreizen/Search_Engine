@@ -72,7 +72,12 @@ public class myController implements Observer {
         setToUseSemantics();
         setToStem();
         myViewModel.setPahtForQueries(txtfld_pathToWrite.getText());
+        long startTime = System.nanoTime();
         this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery_offline.getText(),false);
+        long endTime   = System.nanoTime();
+        long totalTime = endTime - startTime;
+        double totalTimeSecond=(totalTime)*(1.0E-9);
+        System.out.println("time in seconds:"+totalTimeSecond);
         this.myViewModel.writeQueryToDisk();
         showQueries();
     }
@@ -80,7 +85,12 @@ public class myController implements Observer {
         setToUseSemantics();
         setToStem();
         myViewModel.setPahtForQueries(txtfld_pathToWrite.getText());
+        long startTime = System.nanoTime();
         this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery.getText(),true);
+        long endTime   = System.nanoTime();
+        long totalTime = endTime - startTime;
+        double totalTimeSecond=(totalTime)*(1.0E-9);
+        System.out.println("time in seconds:"+totalTimeSecond);
         this.myViewModel.writeQueryToDisk();
         showQueries();
     }
@@ -89,7 +99,12 @@ public class myController implements Observer {
         setToStem();
         String pathOfQueries = txtfld_pathForQuery_offLine.getText();
         myViewModel.setPahtForQueries(pathOfQueries);
+        long startTime = System.nanoTime();
         myViewModel.callSearchManyQuery(pathOfQueries,false);
+        long endTime   = System.nanoTime();
+        long totalTime = endTime - startTime;
+        double totalTimeSecond=(totalTime)*(1.0E-9);
+        System.out.println("time in seconds:"+totalTimeSecond);
         this.myViewModel.writeQueryToDisk();
         showQueries();
     }
@@ -98,7 +113,12 @@ public class myController implements Observer {
         setToStem();
         String pathOfQueries = txtfld_pathForQuery.getText();
         myViewModel.setPahtForQueries(pathOfQueries);
+        long startTime = System.nanoTime();
         myViewModel.callSearchManyQuery(pathOfQueries,true);
+        long endTime   = System.nanoTime();
+        long totalTime = endTime - startTime;
+        double totalTimeSecond=(totalTime)*(1.0E-9);
+        System.out.println("time in seconds:"+totalTimeSecond);
         this.myViewModel.writeQueryToDisk();
         showQueries();
     }
