@@ -51,6 +51,13 @@ public class myController implements Observer {
     public javafx.scene.control.Button btn_clearData;
     public javafx.scene.control.Button btn_showDictionary;
     public javafx.scene.control.Button btn_loadDictionary;
+    public javafx.scene.control.Button findQuery;
+    public javafx.scene.control.Button browse_pathRorQuery;
+    public javafx.scene.control.Button search_pathRorQuery;
+    public javafx.scene.control.Button findQuery_offLine;
+    public javafx.scene.control.Button browse_pathRorQuery_offLine;
+    public javafx.scene.control.Button search_pathRorQuery_offLine;
+
 
 
     @Override
@@ -71,56 +78,82 @@ public class myController implements Observer {
     public void callSearchOneQuery_offLine() throws Exception {
         setToUseSemantics();
         setToStem();
-        myViewModel.setPahtForQueries(txtfld_pathToWrite.getText());
-        long startTime = System.nanoTime();
-        this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery_offline.getText(),false);
-        long endTime   = System.nanoTime();
-        long totalTime = endTime - startTime;
-        double totalTimeSecond=(totalTime)*(1.0E-9);
-        System.out.println("time in seconds:"+totalTimeSecond);
-        this.myViewModel.writeQueryToDisk();
-        showQueries();
+        if((new File(txtfld_pathToWrite.getText()).isDirectory())) {
+            myViewModel.setPahtForQueries(txtfld_pathToWrite.getText());
+            long startTime = System.nanoTime();
+            this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery_offline.getText(), false);
+            long endTime = System.nanoTime();
+            long totalTime = endTime - startTime;
+            double totalTimeSecond = (totalTime) * (1.0E-9);
+            System.out.println("time in seconds:" + totalTimeSecond);
+            this.myViewModel.writeQueryToDisk();
+            showQueries();
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"you didn't enter a legal path");
+            Optional<ButtonType> result = alert.showAndWait();
+        }
     }
     public void callSearchOneQuery_onLine() throws Exception {
         setToUseSemantics();
         setToStem();
-        myViewModel.setPahtForQueries(txtfld_pathToWrite.getText());
-        long startTime = System.nanoTime();
-        this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery.getText(),true);
-        long endTime   = System.nanoTime();
-        long totalTime = endTime - startTime;
-        double totalTimeSecond=(totalTime)*(1.0E-9);
-        System.out.println("time in seconds:"+totalTimeSecond);
-        this.myViewModel.writeQueryToDisk();
-        showQueries();
+        if((new File(txtfld_pathToWrite.getText()).isDirectory())) {
+            myViewModel.setPahtForQueries(txtfld_pathToWrite.getText());
+            long startTime = System.nanoTime();
+            this.myViewModel.callSearchOneQuery("IC", txtfld_singleQuery.getText(), true);
+            long endTime = System.nanoTime();
+            long totalTime = endTime - startTime;
+            double totalTimeSecond = (totalTime) * (1.0E-9);
+            System.out.println("time in seconds:" + totalTimeSecond);
+            this.myViewModel.writeQueryToDisk();
+            showQueries();
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"you didn't enter a legal path");
+            Optional<ButtonType> result = alert.showAndWait();
+        }
     }
     public void callSearchManyQuery_offLine() throws Exception {
         setToUseSemantics();
         setToStem();
         String pathOfQueries = txtfld_pathForQuery_offLine.getText();
-        myViewModel.setPahtForQueries(pathOfQueries);
-        long startTime = System.nanoTime();
-        myViewModel.callSearchManyQuery(pathOfQueries,false);
-        long endTime   = System.nanoTime();
-        long totalTime = endTime - startTime;
-        double totalTimeSecond=(totalTime)*(1.0E-9);
-        System.out.println("time in seconds:"+totalTimeSecond);
-        this.myViewModel.writeQueryToDisk();
-        showQueries();
+        if((new File(pathOfQueries).isDirectory())) {
+            myViewModel.setPahtForQueries(pathOfQueries);
+            long startTime = System.nanoTime();
+            myViewModel.callSearchManyQuery(pathOfQueries, false);
+            long endTime = System.nanoTime();
+            long totalTime = endTime - startTime;
+            double totalTimeSecond = (totalTime) * (1.0E-9);
+            System.out.println("time in seconds:" + totalTimeSecond);
+            this.myViewModel.writeQueryToDisk();
+            showQueries();
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"you didn't enter a legal path");
+            Optional<ButtonType> result = alert.showAndWait();
+        }
     }
     public void callSearchManyQuery_onLine() throws Exception {
         setToUseSemantics();
         setToStem();
         String pathOfQueries = txtfld_pathForQuery.getText();
-        myViewModel.setPahtForQueries(pathOfQueries);
-        long startTime = System.nanoTime();
-        myViewModel.callSearchManyQuery(pathOfQueries,true);
-        long endTime   = System.nanoTime();
-        long totalTime = endTime - startTime;
-        double totalTimeSecond=(totalTime)*(1.0E-9);
-        System.out.println("time in seconds:"+totalTimeSecond);
-        this.myViewModel.writeQueryToDisk();
-        showQueries();
+        if((new File(pathOfQueries).isDirectory())){
+            myViewModel.setPahtForQueries(pathOfQueries);
+            long startTime = System.nanoTime();
+            myViewModel.callSearchManyQuery(pathOfQueries,true);
+            long endTime   = System.nanoTime();
+            long totalTime = endTime - startTime;
+            double totalTimeSecond=(totalTime)*(1.0E-9);
+            System.out.println("time in seconds:"+totalTimeSecond);
+            this.myViewModel.writeQueryToDisk();
+            showQueries();
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"you didn't enter a legal path");
+            Optional<ButtonType> result = alert.showAndWait();
+
+        }
+
     }
 
     public void loadQueryPath(){
@@ -239,17 +272,29 @@ public class myController implements Observer {
     public void deleteData(){
         myViewModel.clearData();
     }
-
+    public void clearDataForNewLoadingOnly(){
+        myViewModel.clearDataForNewLoadingOnly();
+    }
     public void showDictionary() {
         myViewModel.showDictionary();
     }
     public void loadDictionary() throws IOException {
+        clearDataForNewLoadingOnly();
         this.pathToRead = txtfld_pathToWrite.getText();
         myViewModel.setPahToRead(pathToRead);
         this.pathToWrite = txtfld_pathToWrite.getText();
         myViewModel.setPathToWrite(pathToWrite);
         myViewModel.setToStem(toStem);
         myViewModel.loadDictionary(pathToRead,pathToWrite);
+        btn_showDictionary.setDisable(false);
+        check_semantic.setDisable(false);
+        findQuery.setDisable(false);
+        browse_pathRorQuery.setDisable(false);
+        search_pathRorQuery.setDisable(false);
+        findQuery_offLine.setDisable(false);
+        browse_pathRorQuery_offLine.setDisable(false);
+        search_pathRorQuery_offLine.setDisable(false);
+        btn_clearData.setDisable(false);
     }
 
 

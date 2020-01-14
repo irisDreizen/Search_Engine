@@ -83,7 +83,15 @@ public class Main extends Application {
         myController view = fxmlLoader.getController();
        // view.btn_showDictionary.setDisable(true);
         //view.btn_loadDictionary.setDisable(true);
+        view.btn_showDictionary.setDisable(true);
+        view.check_semantic.setDisable(true);
         view.btn_clearData.setDisable(true);
+        view.findQuery.setDisable(true);
+        view.browse_pathRorQuery.setDisable(true);
+        view.search_pathRorQuery.setDisable(true);
+        view.findQuery_offLine.setDisable(true);
+        view.browse_pathRorQuery_offLine.setDisable(true);
+        view.search_pathRorQuery_offLine.setDisable(true);
         view.setStage(primaryStage);
        // view.setResizeEvent(scene);
         view.setViewModel(viewModel);

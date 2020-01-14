@@ -115,8 +115,17 @@ public class myModel extends Observable implements IModel {
         return enteties.get(DocName);
     }
 
-    public void writeQueryToDisk() throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(pathForQueries+"\\"+"results.txt"));
+    public void writeQueryToDisk()  {
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(pathForQueries+"\\"+"results.txt"));
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"you didn't enter a legal path");
+            Optional<ButtonType> result = alert.showAndWait();
+            setChanged();
+            notifyObservers();
+            return;
+        }
         LinkedHashMap<String, Map<String, Double>> sortedDictionary = new LinkedHashMap<>();
         relevantDoc.entrySet().stream().sorted(new Comparator<Map.Entry<String, Map<String, Double>>>() {
             @Override
@@ -129,11 +138,27 @@ public class myModel extends Observable implements IModel {
 
         for(Map.Entry<String, Map<String, Double>> queryId: sortedDictionary.entrySet()){
             for(Map.Entry<String, Double> DocsAndScore: queryId.getValue().entrySet()){
-                writer.write(queryId.getKey()+" 0 "+DocsAndScore.getKey()+" 1 42.38 mt");
-                writer.newLine();
+                try {
+                    writer.write(queryId.getKey()+" 0 "+DocsAndScore.getKey()+" 1 42.38 mt");
+                    writer.newLine();
+                } catch (IOException e) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"writing results to disk faild, please try again");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    setChanged();
+                    notifyObservers();
+                    return;
+                }
+
             }
         }
-        writer.close();
+        try {
+            writer.close();
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"closing result document failed, please try again");
+            Optional<ButtonType> result = alert.showAndWait();
+            setChanged();
+            notifyObservers();
+        }
     }
 
 
@@ -179,7 +204,11 @@ public class myModel extends Observable implements IModel {
 
             }
         }catch (IOException e){
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"you didn't enter a legal path for queries");
+            Optional<ButtonType> result = alert.showAndWait();
+            setChanged();
+            notifyObservers();
+            return null;
         }
         return queries;
 
@@ -297,6 +326,14 @@ public String parseQuery(String pathToWrite, String query) throws IOException {
         enteties = fix;
     }
 
+    public void clearDataForNewLoadingOnly(){
+        if(index!=null){
+            if(index.getP()!=null){
+                index.getP().clearDictionary();
+                index.getP().clearDocInfo();
+            }
+        }
+    }
 
     public void clearData(){
         if(index!=null){
@@ -310,7 +347,10 @@ public String parseQuery(String pathToWrite, String query) throws IOException {
             if(readFile.isDirectory()) {
                 for(File file : readFile.listFiles()) {
                     if(file.getName().length()>2){
-                        if((file.getName().charAt(0)=='I'&& file.getName().charAt(1)=='C')||file.getName().charAt(0)=='p'){
+                        if((file.getName().charAt(0)=='I'&& file.getName().charAt(1)=='C')||file.getName().charAt(0)=='p'|| file.getName().charAt(0)=='s'){
+                            file.delete();
+                        }
+                        if(file.getName().equals("DocInfo_noStem")|| file.getName().equals("DocInfo_stem")|| file.getName().equals("enteties")){
                             file.delete();
                         }
                     }

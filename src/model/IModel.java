@@ -21,4 +21,5 @@ public interface IModel {
     public void setToUseSemantics(boolean toUseSemantics);
     public void writeQueryToDisk() throws IOException;
     public Map<String, Integer> getEntitiesMap(String DocName);
+    public void clearDataForNewLoadingOnly();
 }

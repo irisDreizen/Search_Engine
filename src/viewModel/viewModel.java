@@ -75,4 +75,7 @@ public class viewModel extends Observable implements Observer {
     public Map<String, Integer> getEntitiesMap(String DocName){
         return model.getEntitiesMap(DocName);
     }
+    public void clearDataForNewLoadingOnly(){
+        model.clearDataForNewLoadingOnly();
+    }
 }
