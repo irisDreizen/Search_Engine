@@ -29,6 +29,9 @@ public class viewModel extends Observable implements Observer {
     public void showDictionary(){
         model.showDictionary();
     }
+    public void clearRelevantDoc(){
+        model.clearRelevantDoc();
+    }
     public void setPahToRead(String path){
         pahToRead=path;
         model.setPahtToRead(pahToRead);

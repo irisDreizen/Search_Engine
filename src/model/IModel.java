@@ -22,4 +22,5 @@ public interface IModel {
     public void writeQueryToDisk() throws IOException;
     public Map<String, Integer> getEntitiesMap(String DocName);
     public void clearDataForNewLoadingOnly();
+    public void clearRelevantDoc();
 }

@@ -74,6 +74,9 @@ public class myController implements Observer {
     public void setStage(Stage primaryStage) {
         myStage=primaryStage;
     }
+    public void clearRelevantDoc(){
+        myViewModel.clearRelevantDoc();
+    }
 
     public void callSearchOneQuery_offLine() throws Exception {
         setToUseSemantics();

@@ -36,6 +36,11 @@ public class myModel extends Observable implements IModel {
     public HashMap<String,Map<String,Double>> getRankingMap(){
         return relevantDoc;
     }
+    public void clearRelevantDoc(){
+        if(relevantDoc!=null){
+            relevantDoc.clear();
+        }
+    }
 
     public void setToUseSemantics(boolean toUseSemantics) {
         this.toUseSemantics = toUseSemantics;
@@ -128,7 +133,13 @@ public class myModel extends Observable implements IModel {
     public void writeQueryToDisk()  {
         BufferedWriter writer = null;
         try {
-            writer = new BufferedWriter(new FileWriter(pathForQueries+"\\"+"results.txt"));
+            String st="";
+            if(toStem) {
+                st="Steam";
+            }
+
+            writer = new BufferedWriter(new FileWriter(pathForQueries + "\\" + "results"+st+".txt"));
+
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"you didn't enter a legal path");
             Optional<ButtonType> result = alert.showAndWait();

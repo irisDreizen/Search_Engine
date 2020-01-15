@@ -211,7 +211,7 @@ public class Ranker {
         String listOfSynonym="";
 
         try {
-            Model = Word2VecModel.fromTextFile(new File(".\\resources\\word2vec.c.output.model.txt"));
+            Model = Word2VecModel.fromTextFile(new File("word2vec.c.output.model.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
